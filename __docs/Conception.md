@@ -63,4 +63,3 @@ Mise en place du MPD
 
 ![MPD](./images/MPD.jpg)
 
-## Infos complémentaires
