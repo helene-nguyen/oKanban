@@ -22,4 +22,4 @@ function getConnexion() {
     
 };
 
-export { getConnexion };
+export default getConnexion ;

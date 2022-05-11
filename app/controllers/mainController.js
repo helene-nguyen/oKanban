@@ -1,11 +1,14 @@
 //~import modules
-import * as error from './errorController.js'
+import * as error from './errorController.js';
+
+import { User } from '../models/index.js';
 
 //~controllers
-function testDB(req, res) {
+async function testDB(req, res) {
     try {
         
-        res.send('Youhouuu');
+        const user = await User.findAll();
+        res.send(user);
         res.end();
 
     } catch (err) {
