@@ -15,5 +15,3 @@ Project made with @[GaetanSantucci](https://github.com/GaetanSantucci) and @[Meg
 Etablissement des éléments et mise en place avec MCD/MLD et MPD
 Tout le détail de l'étude de conception c'est [ici](./__docs/Conception.md)
 
-
-
