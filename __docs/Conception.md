@@ -61,6 +61,6 @@ TAG ( code_tag, name, color, created_at, updated_at, )
 
 Mise en place du MPD 
 
-![MPD](./images/mpd.png)
+![MPD](./images/MPD.jpg)
 
 ## Infos complémentaires

@@ -1,4 +1,4 @@
 //~import modules
-const { Sequelize } = require('sequelize');
+import { Sequelize } from "sequelize";
 
 //~

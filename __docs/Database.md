@@ -1,13 +1,40 @@
 # Database
 
-<<<<<<< HEAD
-=======
-## Models
+## Créer la base de données
 
-L'ORM que nous allons utiliser est Sequelize
+On Win :
 
->>>>>>> docs
+```shell
+psql -U postgres
+```
+
+```sql
+CREATE USER okanban WITH PASSWORD 'okanban'
+```
+
+```sql
+CREATE DATABASE okanban OWNER 'okanban'
+```
+
+Check si on peut se connecter
+
+```shell
+\c okanban okanban
+```
+
 ## Syntaxes à respecter
+
+On va écrire notre SQL pour créer la DB, dans un premier temps, il faut ouvrir un nouveau fichier sql.
+
+- une clé primaire est automatiquement **NOT NULL**. Pas besoin de le préciser lors de la création d'une table.
+
+- On spécifie que la colonne sera généré automatiquement par la BDD en suivant une séquence numérique prédéfinie de 1 en 1
+
+- On peut définir **BY DEFAULT** (surcharge de la valeur possible) ou **ALWAYS** (surcharge de la valeur impossible)
+
+- Ici on utilise BY DEFAULT car on défini nous même les valeurs des clé primaires dans les insertions du fichier import_data.sql
+
+- Mais on utilisera plus généralement ALWAYS afin de sécurisé l'incrémentation des valeurs du champ
 
 ```sql
 BEGIN; --Toujours commencer par BEGIN pour démarrer la transaction
@@ -70,3 +97,40 @@ CREATE TABLE IF NOT EXISTS "category_has_snippet" (
 
 COMMIT; -- Fin de la transaction
 ```
+
+Si les clés primaires sont générées par défault, pour éviter tout problème on ajoute :
+
+```sql
+SELECT setval('category_id_seq', (SELECT MAX(id) from "category"));
+```
+
+Ci-dessous un modèle type d'une importation de données :
+
+```sql
+BEGIN;
+
+INSERT INTO "role"("id","name")
+VALUES 
+ (1, 'admin'), 
+ (2, 'user');
+
+INSERT INTO "user"
+    ("id","username","email","password", "role_id")
+VALUES 
+ (1, 'admin', 'admin@admin.com','admin', 1);
+
+SELECT setval('category_id_seq', (SELECT MAX(id) from "category"));
+SELECT setval('role_id_seq', (SELECT MAX(id) from "role"));
+SELECT setval('user_id_seq', (SELECT MAX(id) from "user"));
+SELECT setval('snippet_id_seq', (SELECT MAX(id) from "snippet"));
+SELECT setval('user_id_seq', (SELECT MAX(id) from "user"));
+
+COMMIT;
+```
+
+Import create_db.sql dans okanban
+
+```shell
+\i c:/Users/Gamer/Desktop/oKanban/data/01-create_db.sql 
+```
+
