@@ -1,5 +1,9 @@
 # Database
 
+## Models
+
+L'ORM que nous allons utiliser est Sequelize
+
 ## Syntaxes à respecter
 
 ```sql
