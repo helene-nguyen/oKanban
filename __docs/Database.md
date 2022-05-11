@@ -16,11 +16,17 @@ CREATE USER okanban WITH PASSWORD 'okanban'
 CREATE DATABASE okanban OWNER 'okanban'
 ```
 
-Check si on peut se connecter
+- Check si on peut se connecter
 
 ```shell
 \c okanban okanban
 ```
+- Check si on a bien okanban dans notre liste
+
+```shell
+\l
+```
+![list](./images/list_pg.png)
 
 ## Syntaxes à respecter
 
@@ -133,4 +139,28 @@ Import create_db.sql dans okanban
 ```shell
 \i c:/Users/Gamer/Desktop/oKanban/data/01-create_db.sql 
 ```
+
+Résultat : 
+
+![createdb](./images/createdb.png)
+
+Check de toutes les tables créées :
+
+- Pour l'utilisateur :
+![createdb](./images/user.png)
+
+- Pour la liste
+![createdb](./images/list.png)
+
+- Pour les cartes
+![createdb](./images/card.png)
+
+- Pour les tags
+![createdb](./images/tag.png)
+
+- Pour la table pivot
+
+![createdb](./images/card_has_tag.png)
+
+
 
