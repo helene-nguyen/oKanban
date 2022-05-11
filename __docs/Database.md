@@ -1,5 +1,12 @@
 # Database
 
+<<<<<<< HEAD
+=======
+## Models
+
+L'ORM que nous allons utiliser est Sequelize
+
+>>>>>>> docs
 ## Syntaxes à respecter
 
 ```sql

@@ -1,0 +1,25 @@
+{
+  "name": "okanban",
+  "version": "1.0.0",
+  "description": "Kanban app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen.git"
+  },
+  "author": "yumicode + megafredo + gtn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen/issues"
+  },
+  "homepage": "https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "sequelize": "^6.19.0"
+  }
+}
