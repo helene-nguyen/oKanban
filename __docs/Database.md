@@ -3,7 +3,7 @@
 ## Syntaxes à respecter
 
 ```sql
-BEGIN;
+BEGIN; --Toujours commencer par BEGIN pour démarrer la transaction
 
 DROP TABLE IF EXISTS "user",
 "role",
