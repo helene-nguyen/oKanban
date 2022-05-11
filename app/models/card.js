@@ -56,12 +56,10 @@ Card.init({
         type: DataTypes.DATE,
         allowNull: true
     }
-
+    
 }, {
     sequelize,
     tableName: 'card'
 });
 
-export {
-    Card
-};
+export { Card};

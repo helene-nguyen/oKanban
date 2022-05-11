@@ -16,7 +16,8 @@ function getConnexion() {
             },
 
             host: process.env.DB_HOST,
-            dialect: process.env.DB_ENV
+            dialect: process.env.DB_ENV,
+            logging: false
         }
     )
     
