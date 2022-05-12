@@ -11,6 +11,9 @@ import * as error from './app/controllers/errorController.js'
 
 //~session
 
+//~statics
+app.use('/', express.static('sandbox'));
+
 //~router
 app.use(router);
 
