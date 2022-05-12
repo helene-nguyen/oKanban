@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS "list" (
     "title" TEXT NOT NULL,
     "description" TEXT NULL,
     "order" INTEGER NOT NULL,
-    "user_id" INTEGER NOT NULL REFERENCES "user"("id"),
+    "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ
 );
@@ -33,8 +33,8 @@ CREATE TABLE IF NOT EXISTS "card" (
     "description" TEXT NULL,
     "color" TEXT NULL,
     "order" INTEGER NOT NULL,
-    "user_id" INTEGER NOT NULL REFERENCES "user"("id"),
-    "list_id" INTEGER NOT NULL REFERENCES "list"("id"),
+    "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
+    "list_id" INTEGER NOT NULL REFERENCES "list"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ
 );
@@ -49,8 +49,8 @@ CREATE TABLE IF NOT EXISTS "tag"(
 
 CREATE TABLE IF NOT EXISTS "card_has_tag"(
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "card_id" INTEGER NOT NULL REFERENCES "card"("id"),
-    "tag_id" INTEGER NOT NULL REFERENCES "tag"("id"),
+    "card_id" INTEGER NOT NULL REFERENCES "card"("id") ON DELETE CASCADE,
+    "tag_id" INTEGER NOT NULL REFERENCES "tag"("id") ON DELETE CASCADE,
     UNIQUE("card_id", "tag_id")
 );
 

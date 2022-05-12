@@ -196,4 +196,121 @@ TADAAAAM !
 
 ![testdb](./images/testdb.gif)
 
+## Association des tables
+
+L'établissement des associations permet de relier les tables entre elles.
+
+Tous les indices sont notés dans la table en elle-même. Pour chercher les informations, on rentre dans la table sur la console en faisant :
+
+```sql
+\d user --ou autre nom de table
+```
+
+On verra appraître ces informations :
+
+![user](./images/user.png)
+
+Vous trouverez ces indices en-dessous de la table :
+
+```shell
+Index :
+    "user_pkey" PRIMARY KEY, btree (id)
+    "user_email_key" UNIQUE CONSTRAINT, btree (email)
+Référencé par :
+    TABLE "card" CONSTRAINT "card_user_id_fkey" FOREIGN KEY (user_id) REFERENCES "user"(id)
+    TABLE "list" CONSTRAINT "list_user_id_fkey" FOREIGN KEY (user_id) REFERENCES "user"(id)
+```
+
+On voit grâce aux 2 dernières lignes que la table ***user*** est aussi référencée dans la table ***card*** et la table ***list*** et la clé étrangère qui va lier ces tables avec ***user***.
+
+Cette information nous permet de montrer qu'il y a un lien par le biais de ***user_id*** et nous permet déjà d'en déduire qu'on va faire une association entre *user* avec *card* et *user* avec *list*
+
+Une association avec Sequelize permet d'établir un lien dans un sens mais il faut également établir le lien dans l'autre sens. On aura donc une association et sa réciproque.
+
+Voici donc les associations pour nos tables :
+
+```js
+//~import modules
+import { User } from './user.js';
+import { List } from './list.js';
+import { Tag } from './tag.js';
+import { Card } from './card.js';
+
+//~associations
+//^ ---------------------------- USER - LIST
+User.hasMany(List, {
+    foreignKey: 'user_id',
+    as: 'lists'
+});
+
+List.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+});
+
+//^ ---------------------------- USER - CARD
+User.hasMany(Card, {
+    foreignKey: 'user_id',
+    as: 'cards'
+});
+
+Card.belongsTo(User, {
+    foreignKey: 'user_id',
+    as: 'user'
+});
+
+//^ ---------------------------- CARD - LIST
+Card.belongsTo(List, {
+    foreignKey: 'list_id',
+    as: 'list'
+});
+
+List.hasMany(Card, {
+    foreignKey: 'list_id',
+    as: 'cards'
+});
+
+//^ ---------------------------- CARD_HAS_TAG
+Card.belongsToMany(Tag, {
+    foreignKey: 'card_id',
+    through: 'card_has_tag',
+    otherKey: 'tag_id',
+    as: 'tags'
+});
+
+Tag.belongsToMany(Card, {
+    foreignKey: 'tag_id',
+    through: 'card_has_tag',
+    otherKey: 'card_id',
+    as: 'cards'
+});
+
+
+export { User, List, Tag, Card };
+
+```
+
+L'association avec la table pivot est particulière, il faut indiquer les 2 clés qu'on récupère et la clé par laquelle ces id passent de cette manière :
+
+```js
+//^ ---------------------------- CARD_HAS_TAG
+Card.belongsToMany(Tag, {
+    foreignKey: 'card_id',
+    through: 'card_has_tag',
+    otherKey: 'tag_id',
+    as: 'tags'
+});
+
+Tag.belongsToMany(Card, {
+    foreignKey: 'tag_id',
+    through: 'card_has_tag',
+    otherKey: 'card_id',
+    as: 'cards'
+});
+```
+
+On retrouve donc la clé étrangère, passant par la clé de la table pivot et l'autre clé.
+
+
+
 [Retour à la page d'accueil](/README.md)
