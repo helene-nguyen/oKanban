@@ -12,7 +12,7 @@ import * as error from './app/controllers/errorController.js'
 //~session
 
 //~statics
-app.use('/', express.static('sandbox'));
+// app.use('/', express.static('sandbox'));
 
 //~router
 app.use(router);
@@ -26,3 +26,4 @@ const PORT = process.env.PORT ?? 3000;
 app.listen(PORT, () => {
     console.log(`Running server on http://localhost:${PORT}`);
 });
+
