@@ -4,54 +4,46 @@ Mise en place API avec l'architecture REST
 
 ### Architecture REST
 
-Mettre en place l'architecture "classique" d'une projet express :
+**REST (Representational State Transfer) ou RESTful** est un style d’architecture permettant de construire des applications (Web, Intranet, Web Service). Il s’agit d’un ensemble de conventions et de bonnes pratiques à respecter et non d’une technologie à part entière. L’architecture REST utilise les spécifications originelles du **protocole HTTP**, plutôt que de réinventer une surcouche (comme le font SOAP ou XML-RPC par exemple).
 
-- installer les dépendances nécessaires avec npm.
-- dossier `app/controllers`.
-- fichier `app/router.js`.
-- point d'entrée `index.js`.
+- Règle n°1 : l’URI comme identifiant des ressources
+- Règle n°2 : les verbes HTTP comme identifiant des opérations
+- Règle n°3 : les réponses HTTP comme représentation des ressources
+- Règle n°4 : les liens comme relation entre ressources
+- Règle n°5 : un paramètre comme jeton d’authentification
 
-### Le Train-train Express
+Le détail du fonctionnement des API RESTful peuvent être retrouvé [ici](https://blog.nicolashachet.com/developpement-php/larchitecture-rest-expliquee-en-5-regles/)
 
-Mettre en place le fichier `index.js`. Oui c'est vrai, c'est un peu toujours la même chose...
+Ce qui est important à retenir, c'est que généralement pour une ressource, il y a 4 opérations possibles (CRUD) :
 
-Note: pensez qu'on va faire des routes POST ! (donc avec des body ...)
+- Créer (create)
+- Afficher (read)
+- Mettre à jour (update)
+- Supprimer (delete)
 
-### Premiers controller, premières routes
+HTTP propose les verbes correspondant :
 
-En respectant au maximum les principes de l'architecture REST, et le tableau de routes fait ensemble, implémentez tout ce que vous pouvez !
+- Créer (create) => **POST**
+- Afficher (read) => **GET**
+- Mettre à jour (update) => **PUT** ou **PATCH**
+- Supprimer (delete) => **DELETE**
 
-- commencez plutôt par les routes GET
-- puis les POST
-- puis les PATCH
-- et enfin les DELETE
-- ceci n'est qu'un conseil ! si vous préférez faire toutes les "/list" d'abord, libre à vous !
 
-Pour tester toutes ces routes, il existe plusieurs solutions, mais la plus simple reste d'utiliser un petit logiciel :
+
+
+
+Pour tester les routes, il existe plusieurs solutions, et la plus simple reste d'utiliser un petit logiciel :
 
 - [Insomnia](https://support.insomnia.rest/article/23-installation#ubuntu)
 - [POSTMAN](https://www.getpostman.com/)
 - [VSC REST client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
 - y'en a probablement d'autres...
 
-N'oubliez pas que les routes GET sont facilement testables depuis n'importe quel navigateur en tapant la route dans la barre d'URL
+[Source venant des cours de l'école O'clock](https://oclock.io/formations)
+
 
 ---
 
-# Routes
-
-| URL | GET | POST | PATCH | DELETE | PUT |
-|---|---|---|---|---|---|
-| `/lists` | récupérer toutes les listes | créer une liste | mettre à jour toutes les listes (❌) | supprimer toutes les listes (❌) | remplacer toutes les listes (❌) |
-| `/lists/:id` | récupérer UNE liste via son ID | créer une listes en fixant son id d'avance (❌) | mettre à jour une liste via son ID | supprimer une liste via son ID | remplacer entièrement liste (❌) |
-| |
-| `/cards` | récupérer toutes les cartes | créer une carte | mettre à jour toutes les cartes (❌) | supprimer toutes les cartes (❌) | remplacer toutes les cartes (❌)
-| `/cards/:id` | récupérer UNE carte via son ID | créer une carte en fixant son id d'avance (❌) | mettre à jour une carte via son ID | supprimer une carte via son ID | remplacer entièrement une carte (❌) |
-| |
-| `/tags`| récupérer tous les labels | créer un label | mettre à jour tous les labels (❌) | supprimer tous les labels (❌) | remplacer tous les labels (❌)
-| `/tags/:id` | récupérer UN label via son ID | créer un label en fixant son id d'avance (❌) | mettre à jour un label via son ID | supprimer un label via son ID | remplacer entièrement un label
-
-(❌) = ne pas faire
 
 
 Test des envois fait avec l'extension Rest-Client
@@ -94,7 +86,7 @@ Connection: close
 }
 ```
 
-Affichage des listes : 
+Affichage des listes :
 
 ```js
 HTTP/1.1 200 OK
@@ -126,3 +118,62 @@ Connection: close
   }
 ]
 ```
+
+Subtilité entre **PUT** et **PATCH**
+
+Test mené :
+
+```js
+//!TEST ZONE
+async function updateTest(req, res) {
+    try {
+        const list = await List.upsert(
+            {
+                title: `I'm a survivor`,
+                order: 1,
+                user_id:1
+            },
+            {
+                where: { id: 7 }
+            });
+
+        console.log(list);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+Valeurs obligatoires sinon renvoie une erreur
+
+Erreur
+
+```js
+HTTP/1.1 500 Internal Server Error
+X-Powered-By: Express
+Content-Type: text/html; charset=utf-8
+Content-Length: 98
+ETag: W/"62-Sj3R3CTUzSGl+Pun0rZkI/8rJz8"
+Date: Thu, 12 May 2022 16:43:45 GMT
+Connection: close
+
+une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »
+```
+
+Résultat
+
+```js
+  {
+    "id": 17,
+    "title": "I'm a survivor",
+    "description": null,
+    "order": 1,
+    "user_id": 1,
+    "created_at": "2022-05-12T16:34:46.745Z",
+    "updated_at": null
+  }
+```
+
+
+[Retour à l'accueil](/README.md)

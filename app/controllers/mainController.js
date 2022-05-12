@@ -13,7 +13,7 @@ async function testDB(req, res) {
         res.json(tags);
 
     } catch (err) {
-        error._500;
+        error._500(err, req, res);
     }
 };
 

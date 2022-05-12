@@ -14,7 +14,7 @@ async function fetchAllLists(req, res) {
         res.json(lists);
 
     } catch (err) {
-        error._500;
+        error._500(err, req, res);
     }
 };
 //&=================ONE LISTS
@@ -25,7 +25,7 @@ async function fetchOneList(req, res) {
         res.json(list);
 
     } catch (err) {
-        error._500;
+        error._500(err, req, res);
     }
 };
 
@@ -42,7 +42,7 @@ async function createList(req, res) {
         console.log(list);
 
     } catch (err) {
-        error._500;
+        error._500(err, req, res);
     }
 };
 
@@ -52,20 +52,19 @@ async function updateList(req, res) {
         const list = await List.update(
             //values
             {
-                title: `I'm a survivor`,
-                description: `My Own Way`
+                title: `I'm a survivor`
             },
             //options
             {
                 where: {
-                    id: 8
+                    id: 7
                 }
             });
 
         console.log(list);
 
     } catch (err) {
-        error._500;
+        error._500(err, req, res);
     }
 };
 //&=================DELETE LIST
@@ -80,7 +79,7 @@ async function deleteList(req, res) {
         console.log(deleteList);
 
     } catch (err) {
-        error._500;
+        error._500(err,req,res);
     }
 };
 

@@ -23,3 +23,26 @@ Pour cette étape, toute la mise en place pour la création de la base de donné
 
 Cette phase là explique notre démarche pour la connexion avec la base de données. 
 Nous avons utilisé les imports et exports par le biais d'*ES6 Module System* avec un environnement strict de *JavaScript* et tout le détail se trouve [là](./__docs/ConnectDB.md)
+
+
+## API RESTful : phase de test de l'API en respectant l'architecture REST
+
+On cherche à définir les différentes routes en respectant l'architecture REST en suivnat les indications suivantes :
+
+# Routes
+
+| URL | GET | POST | PATCH | DELETE | PUT |
+|---|---|---|---|---|---|
+| `/lists` | récupérer toutes les listes | créer une liste | mettre à jour toutes les listes (❌) | supprimer toutes les listes (❌) | remplacer toutes les listes (❌) |
+| `/lists/:id` | récupérer UNE liste via son ID | créer une listes en fixant son id d'avance (❌) | mettre à jour une liste via son ID | supprimer une liste via son ID | remplacer entièrement liste (❌) |
+| |
+| `/cards` | récupérer toutes les cartes | créer une carte | mettre à jour toutes les cartes (❌) | supprimer toutes les cartes (❌) | remplacer toutes les cartes (❌)
+| `/cards/:id` | récupérer UNE carte via son ID | créer une carte en fixant son id d'avance (❌) | mettre à jour une carte via son ID | supprimer une carte via son ID | remplacer entièrement une carte (❌) |
+| |
+| `/tags`| récupérer tous les labels | créer un label | mettre à jour tous les labels (❌) | supprimer tous les labels (❌) | remplacer tous les labels (❌)
+| `/tags/:id` | récupérer UN label via son ID | créer un label en fixant son id d'avance (❌) | mettre à jour un label via son ID | supprimer un label via son ID | remplacer entièrement un label
+
+(❌) = ne pas faire
+
+
+Tout de détail de notre implémentation c'est par [ici](./__docs/ApiRest.md) !
