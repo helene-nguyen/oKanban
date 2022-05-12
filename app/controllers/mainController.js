@@ -1,18 +1,22 @@
 //~import modules
 import * as error from './errorController.js';
-import clc from 'cli-color';
 
-/* import { User } from '../models/index.js'; */
+import {
+    Tag
+} from '../models/index.js';
 
 //~controllers
 async function testDB(req, res) {
     try {
-        res.send("|------------------- TEST -----------------|");
-        res.end();
- 
+        console.log('TEEEEST');
+        const tags = await Tag.findAll();
+        res.json(tags);
+
     } catch (err) {
         error._500;
     }
 };
 
-export { testDB };
+export {
+    testDB
+};
