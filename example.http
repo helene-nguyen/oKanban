@@ -7,10 +7,14 @@ GET http://localhost:4100/
 #-------LIST
 GET http://localhost:4100/lists
 
-
 ###
 POST http://localhost:4100/lists
 
 ###
+GET http://localhost:4100/lists/2
 
-GET http://localhost:4100/
+###
+PATCH http://localhost:4100/lists/2
+
+###
+DELETE  http://localhost:4100/lists/1
