@@ -56,7 +56,10 @@ async function updateList(req, res) {
                 description: `My Own Way`
             },
             //options
-            { where: { id: 8 }
+            {
+                where: {
+                    id: 8
+                }
             });
 
         console.log(list);
@@ -66,12 +69,26 @@ async function updateList(req, res) {
     }
 };
 //&=================DELETE LIST
+async function deleteList(req, res) {
+    try {
+        const deleteList = await List.destroy({
+            where: {
+                id: 11
+            }
+        });
 
+        console.log(deleteList);
+
+    } catch (err) {
+        error._500;
+    }
+};
 
 
 export {
     fetchAllLists,
     fetchOneList,
     createList,
-    updateList
+    updateList,
+    deleteList
 };

@@ -17,4 +17,4 @@ GET http://localhost:4100/lists/2
 PATCH http://localhost:4100/lists/2
 
 ###
-DELETE  http://localhost:4100/lists/1
+DELETE  http://localhost:4100/lists/12
