@@ -1,8 +1,8 @@
 // ~ import modules
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from 'sequelize';
 
 // ~ connect to database
-import getConnexion from "../database.js"
+import getConnexion from '../database.js';
 const sequelize = getConnexion();
 
 class Tag extends Model { };
@@ -35,7 +35,7 @@ Tag.init({
 },
     {
         sequelize,
-        tableName: "tag"
+        tableName: 'tag'
     }
 );
 

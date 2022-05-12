@@ -1,8 +1,5 @@
 //~import modules
-import {
-    DataTypes,
-    Model
-} from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import getConnexion from "../database.js"
 const sequelize = getConnexion();
 

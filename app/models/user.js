@@ -1,10 +1,10 @@
 //~import modules
-import { DataTypes, Model } from "sequelize";
-import getConnexion from "../database.js"
+import { DataTypes, Model } from 'sequelize';
+import getConnexion from '../database.js';
 const sequelize = getConnexion();
 
 //~class
-class User extends Model {}
+class User extends Model { };
 
 User.init({
    id: { 
@@ -47,7 +47,7 @@ User.init({
 },
    {
    sequelize,
-   tableName: "user"
+   tableName: 'user'
    }
 )
 

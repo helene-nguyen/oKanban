@@ -1,9 +1,10 @@
+//~import modules
 import {
     Model,
     DataTypes
 } from 'sequelize';
-
-import getConnexion from "../database.js"
+//~connect DB
+import getConnexion from '../database.js';
 const sequelize = getConnexion();
 
 class Card extends Model {}
@@ -62,4 +63,4 @@ Card.init({
     tableName: 'card'
 });
 
-export { Card};
+export { Card };
