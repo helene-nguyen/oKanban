@@ -18,8 +18,7 @@ async function fetchAllCards(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-
-}
+};
 //&=================CREATE CARD
 async function createCard(req, res) {
 
@@ -37,7 +36,7 @@ async function createCard(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-}
+};
 //&=================ONE CARD
 async function fetchOneCard(req, res) {
 
@@ -51,8 +50,7 @@ async function fetchOneCard(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-
-}
+};
 //&================= UPDATE CARD
 async function updateCard(req, res) {
     try {
@@ -77,32 +75,7 @@ async function updateCard(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-}
-//&================= UPSERT CARD
-async function upsertCard(req, res) {
-    try {
-
-        const upsert = await Card.upsert({
-
-            title: 'Trop content id:10!!!!!',
-            order: 1,
-            description: 'Ceci est un upsert10',
-            user_id: 1,
-            list_id: 1,
-        }, {
-            where: {
-                id: 10
-            }
-        }, {
-            returning: true
-        });
-
-        console.log(upsert);
-
-    } catch (err) {
-        _500(err, req, res);
-    }
-}
+};
 
 //&=================DELETE CARD
 async function deleteCard(req, res) {
@@ -118,7 +91,7 @@ async function deleteCard(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-}
+};
 
 
 export {
@@ -126,6 +99,5 @@ export {
     createCard,
     fetchOneCard,
     updateCard,
-    upsertCard,
     deleteCard
 };

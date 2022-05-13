@@ -64,7 +64,7 @@ async function updateTag(req, res) {
 //&=================UPSERT TAG (PUT)
 async function upsertTag(req, res) {
     try {
-        const tag = await Tag.upsert({
+        const tag = await Tag.update({
             id:24,
             name: 'try upsert 6'
         }

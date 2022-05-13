@@ -32,11 +32,10 @@ Pour tester les routes, il existe plusieurs solutions, et la plus simple reste d
 
 - [Insomnia](https://support.insomnia.rest/article/23-installation#ubuntu)
 - [POSTMAN](https://www.getpostman.com/)
-- [VSC REST client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
+- [VSC REST client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) (celui sur lequel nous sommes partis)
 - y'en a probablement d'autres...
 
 [Source venant des cours de l'école O'clock](https://oclock.io/formations)
-
 
 ---
 
@@ -71,11 +70,287 @@ export { router };
 
 On importe le module pour gérer les routes avec Express puis on importe les différentes routes.
 
-//TODO redaction utilisation des routes + controllers
-
-
 ## Test des routes et gestion des données par les controllers
 
+### Router
+
+Pour l'exemple, nous partons sur le routeur pour la gestion des listes.
+
+On importe le module *Router* d'[Express](https://expressjs.com/fr/4x/api.html#app) ainsi que les méthodes que nous utiliserons sur chaque route dans notre architecture RESTful.
+
+```js
+//~import modules
+import { Router } from 'express';
+const router = Router();
+
+import { createList, deleteList, fetchAllLists, fetchOneList, updateList } from '../controllers/listController.js'
+
+//^===============LIST
+router.get('/lists', fetchAllLists);
+router.post('/lists', createList);
+
+router.get('/lists/:id', fetchOneList);
+router.patch('/lists/:id', updateList);
+router.delete('/lists/:id', deleteList);
+
+export { router };
+```
+
+Chaque méthode sera donc gérée par notre controller pour les listes de la manière suivante :
+
+- Importation des modules nécessaires :
+
+```js
+//~import modules
+import * as error from './errorController.js';
+
+import {
+    List
+} from '../models/index.js';
+```
+
+#### <u>Gestion des erreurs avec le controller </u>
+
+Pour la gestion des erreurs, nous sommes partis sur un controller indépendant qui va assembler toutes les erreur :
+
+```js
+function _400(req, res) {
+    res.status(400).json('BAD REQUEST');
+};
+function _401(req, res) { res.status(401).json('AUTHENTIFICATION ERROR');
+};
+function _403(req, res) { res.status(403).json('ACCESS DENIED');
+};
+function _404(req, res, message) {
+    res.status(404).json({ "Error 404": message });
+};
+function _500(err, req, res) { res.status(500).json({"Server Error 500": err.message});
+};
+
+export { _400,_401, _403,_404,_500 };
+```
+
+Celle-ci en l'important dans les controllers, permettra de redistribuer les erreurs recherchées.
+
+### FetchAllLists
+
+- Pour récupérer toutes les listes :
+
+```js
+async function fetchAllLists(req, res) {
+    try {
+        const lists = await List.findAll({
+            attributes: {
+                exclude: ['created_at', 'updated_at']
+            },
+            //-------------------------------------------------------//
+            //~Methode 1 en citant les model et en les important
+            include: [{
+                model: Card,
+                as: 'cards',
+                attributes: {
+                    exclude: ['id', 'order', 'user_id', 'list_id', 'color', 'created_at', 'updated_at']
+                },
+            }, {
+                model: User,
+                as: 'user',
+                attributes: {
+                    exclude: ['id', 'avatar', 'email', 'password', 'created_at', 'updated_at']
+                }
+            }]
+            //-----------------------------------------------------//
+
+            //~Methode 2 en allant directement chercher l'alias sans importer les models
+            include: [{
+                    association: 'cards',
+                    attributes: {
+                        exclude: ['id', 'order', 'user_id', 'list_id', 'color', 'created_at', 'updated_at']
+                    },
+                },
+                {
+                    association: 'user',
+                    attributes: {
+                        exclude: ['id', 'avatar', 'email', 'password', 'created_at', 'updated_at']
+                    }
+                }
+            ],
+            order: [
+                // je viens ordonner les listes par position croissante
+                ['order', 'ASC'],
+                // et les cards par position croissante
+                ['cards', 'order', 'ASC']
+            ]
+          //-----------------------------------------------------//
+        });
+
+          res.json(lists);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+### CreateOneList
+
+- Pour créer une liste :
+
+```js
+async function createList(req, res) {
+    try {
+        // je récupère ce qui est envoyé par la requête POST
+        const list = req.body;
+
+        //on met en place les conditions pour renvoyer les erreurs si ce qui ne doit pas être NULL doit être rempli
+        if (!list.title) {
+            throw new Error("Le nom de la liste doit être précisé");
+        };
+        if (!list.order) {
+            throw new Error("La position de la liste doit être précisée");
+        }
+
+        if (!list.user_id) {
+            throw new Error("L'utilisateur doit être identifié");
+        }
+        //Et seulement après on peut générér une liste
+        // le .save() vient insérer en BDD notre objet, au retour, il vient mettre à jour l'id de celui-ci
+        let newList = List.build({
+            title: list.title,
+            order: list.order,
+            user_id: list.user_id
+        });
+
+        await newList.save();
+
+        res.json(newList);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+Pour la création de la liste, on compte 3 manières différentes de procéder que vous retrouverez ci-dessous :
+
+```js
+ // Méthode 1
+        // Utilisation de la méthode create
+        const list = await List.create({
+            title: 'Tache finalisé !',
+            order: 3,
+            description: 'En paix !',
+            user_id: 1
+        })
+        return res.json('Liste créer')
+       
+        
+        // Méthode 2
+        // Utilisation de la méthode build()
+        const list2 = List.build({
+            title: 'Tache finalisé !',
+            order: 3,
+            description: 'En paix !',
+            user_id: 1
+        });
+        return res.json(await list2.save());
+
+        // Méthode 3
+        // Utilisation de la méthode new List()
+        const list3 = new List({
+            title: 'Tache finalisé !',
+            order: 3,
+            description: 'En paix !',
+            user_id: 1
+        });
+        return await list3.save();
+
+        //merci Fredo pour la rédaction des méthodes :)
+```
+
+### FetchOneList
+
+- Pour récupérer une liste :
+
+```js
+async function fetchOneList(req, res) {
+    try {
+
+        //On récupère l'id  paramètres de l'url(query string)
+        const listID = req.params.id;
+
+        //On récupère la liste en BDD via son id
+        const list = await List.findByPk(listID, {
+            include: [{
+                association: "cards",
+                include: [{
+                    association: "tags"
+                }]
+            }],
+            order: [
+                // les cards par position croissante
+                ["cards", "order", "ASC"]
+            ]
+        });
+
+        //on vérifie que la liste n'est pas vide
+        if (!list) {
+            return error._404(req, res, "Impossible to retreive the list with this id");
+        };
+
+        res.json(list);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+Pour cette étape, on va bien chercher l'élément en fonction de son id et les associations nous permettent d'avoir les informations que l'on souhaite afficher lors de l'envoi des données.
+
+On met en place avant l'envoi des données la condition d'existence d'une liste.
+
+### UpdateOneList
+
+- Pour mettre à jour une liste :
+
+```js
+async function updateList(req, res) {
+    try {
+        const listID = req.params.id;
+
+        //on récupère la liste en BDD
+        const list = await List.findByPk(listID);
+
+        //on vérifie si une liste a été trouvée
+        if (!list) {
+            return error._404(req, res, "Impossible to retreive the list with this id");
+        };
+
+        if (req.body.title) { //on vérifie si on souhaite modifier le nom
+            list.title = req.body.title;
+        };
+
+        if (req.body.order) { //on vérifie si on souhaite modifier la order
+            list.order = req.body.order;
+        };
+        //puis on met à jour en BDD
+        await list.save();
+
+        res.json(list);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+Ici aussi on met les conditions d'existence que chaque élément à modifier et on indique ce qu'on souhaite
+
+- Pour supprimer une liste :
+
+### Test avec Insomnia
+
+### Test avec l'extension Rest Client VSCode
 
 Test des envois fait avec l'extension Rest-Client
 
@@ -149,12 +424,11 @@ Connection: close
 
 Erreur qu'on peut trouver si on reset nos tables et qu'un utilisateur n'existe pas dans la table car nous avons imposé le fait que une liste ne peut exister qu'uniquement si un utilisateur existe :
 
-Erreur dans le body : 
+Erreur dans le body :
 
 ```js
 insert or update on table "list" violates foreign key constraint "list_user_id_fkey"
 ```
-
 
 Affichage des erreurs géré par notre errorController :
 
@@ -174,6 +448,31 @@ Connection: close
 
 {
   "Server Error 500": "une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »"
+}
+```
+
+Pour lancer une erreur, ne pas oublier de créer la nouvelle erreur avec throw new Error :
+
+```js
+     if (!list.title) {
+            throw new Error("Le nom de la liste doit être précisé");
+        }
+;
+```
+
+Pour les test avec l'extension Rest Client, le format du body doit être écrit de la manière suivante selon des règles très strictes :
+
+```shell
+
+POST http://localhost:4100/lists
+#format json
+Content-type: application/json
+#Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
+
+{
+    "title": "sample",
+    "order": 9,
+    "user_id": 1
 }
 ```
 

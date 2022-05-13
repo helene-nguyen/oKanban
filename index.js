@@ -7,12 +7,12 @@ import session from 'express-session';
 import { router } from './app/routes/index.js';
 import * as error from './app/controllers/errorController.js'
 
-//~url encoded
-
+//~read the body
+//accept Content-type: application/json
 app.use(express.json());
-// accept content-type: application/x-www-form-urlencoded
+// accept Content-type: application/x-www-form-urlencoded
 app.use(express.urlencoded({
-    extended: true
+    extended: false
 }));
 
 //~session
