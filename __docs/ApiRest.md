@@ -147,61 +147,34 @@ Connection: close
 ]
 ```
 
-Subtilité entre **PUT** et **PATCH**
+Erreur qu'on peut trouver si on reset nos tables et qu'un utilisateur n'existe pas dans la table car nous avons imposé le fait que une liste ne peut exister qu'uniquement si un utilisateur existe :
 
-Test mené :
+Erreur dans le body : 
 
 ```js
-//!TEST ZONE
-async function updateTest(req, res) {
-    try {
-        const list = await List.upsert(
-            {
-                title: `I'm a survivor`,
-                order: 1,
-                user_id:1
-            },
-            {
-                where: { id: 7 }
-            });
-
-        console.log(list);
-
-    } catch (err) {
-        error._500(err, req, res);
-    }
-};
+insert or update on table "list" violates foreign key constraint "list_user_id_fkey"
 ```
 
-Valeurs obligatoires sinon renvoie une erreur
 
-Erreur
+Affichage des erreurs géré par notre errorController :
+
+```js
+function _500(err, req, res) { res.status(500).json({"Server Error 500": err.message});
+};
+```
 
 ```js
 HTTP/1.1 500 Internal Server Error
 X-Powered-By: Express
-Content-Type: text/html; charset=utf-8
-Content-Length: 98
-ETag: W/"62-Sj3R3CTUzSGl+Pun0rZkI/8rJz8"
-Date: Thu, 12 May 2022 16:43:45 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 121
+ETag: W/"79-ATDzh+ktgm6e93+i1ICXLnXic3U"
+Date: Fri, 13 May 2022 09:17:00 GMT
 Connection: close
 
-une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »
+{
+  "Server Error 500": "une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »"
+}
 ```
-
-Résultat
-
-```js
-  {
-    "id": 17,
-    "title": "I'm a survivor",
-    "description": null,
-    "order": 1,
-    "user_id": 1,
-    "created_at": "2022-05-12T16:34:46.745Z",
-    "updated_at": null
-  }
-```
-
 
 [Retour à l'accueil](/README.md)

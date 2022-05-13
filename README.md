@@ -46,3 +46,10 @@ On cherche à définir les différentes routes en respectant l'architecture REST
 
 
 Tout de détail de notre implémentation c'est par [ici](./__docs/ApiRest.md) !
+
+Attention pour les tests, si on fait un reset de la table avec create_db.sql, bien vérifier qu'on a créé un utilisateur pour pouvoir générer une liste avec la méthode *POST*.
+
+
+## Notre API
+
+Notre API RESTful renvoie bien les données récupérées à la base de données en JSON en faisant un `res.json()` et on permet aux personnes intéressées

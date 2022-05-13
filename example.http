@@ -1,14 +1,26 @@
 #------------------------HOME 
-
 GET http://localhost:4100/
 
-###
 
 # ----------------------------LIST
+###
 GET http://localhost:4100/lists
 
 ###
 POST http://localhost:4100/lists
+#format json
+content-type: application/json
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+#format urlencoded
+content-type: application/x-www-form-urlencoded
+
+title=sample,
+&time=Wed, 21 Oct 2015 18:27:50 GMT
 
 ###
 GET http://localhost:4100/lists/2
@@ -22,9 +34,10 @@ PUT http://localhost:4100/lists/2
 ###
 DELETE  http://localhost:4100/lists/12
 
-###
+
 
 # ---------------------------- TAG
+###
 GET http://localhost:4100/tags
 
 ###
@@ -60,7 +73,7 @@ DELETE http://localhost:4100/cards/:id
 # ----------------------------- USER
 
 ###
- GET http://localhost:4100/kanban/
+GET http://localhost:4100/kanban/
 
 ###
 GET http://localhost:4100/profile/

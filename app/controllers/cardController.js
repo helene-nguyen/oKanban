@@ -30,7 +30,7 @@ async function createCard(req, res) {
             description: 'On part en guerre !',
             color: '#FFF',
             user_id: 1,
-            list_id: 1,
+            list_id: 8,
         })
         res.json(card)
 

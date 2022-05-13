@@ -9,6 +9,12 @@ import * as error from './app/controllers/errorController.js'
 
 //~url encoded
 
+app.use(express.json());
+// accept content-type: application/x-www-form-urlencoded
+app.use(express.urlencoded({
+    extended: true
+}));
+
 //~session
 
 //~statics

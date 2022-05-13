@@ -36,7 +36,7 @@ async function createTag(req, res) {
             name: 'doc',
             color: '#36AE7B'
         });
-//REMOVE 
+        //REMOVE 
         console.log(tag);
 
     } catch (err) {
@@ -47,10 +47,14 @@ async function createTag(req, res) {
 //&=================UPDATE TAG (PATCH)
 async function updateTag(req, res) {
     try {
-        const tag = await Tag.update(
-            {name: `Truc`},
-            {where: { id: 14} });
-//REMOVE 
+        const tag = await Tag.update({
+            name: `Truc`
+        }, {
+            where: {
+                id: 24
+            }
+        });
+        //REMOVE 
         console.log(tag);
 
     } catch (err) {
@@ -60,10 +64,12 @@ async function updateTag(req, res) {
 //&=================UPSERT TAG (PUT)
 async function upsertTag(req, res) {
     try {
-        const tag = await Tag.upsert(
-            {name: 'try upsert 4'},
-            { where: { id: 4 } });
-//REMOVE 
+        const tag = await Tag.upsert({
+            id:24,
+            name: 'try upsert 6'
+        }
+    );
+        //REMOVE 
         console.log(tag);
 
     } catch (err) {
@@ -74,13 +80,15 @@ async function upsertTag(req, res) {
 async function deleteTag(req, res) {
     try {
         const deleteTag = await Tag.destroy({
-            where: { id: [14] }
+            where: {
+                id: [26]
+            }
         });
-//REMOVE
+        //REMOVE
         console.log(deleteTag);
 
     } catch (err) {
-        error._500(err,req,res);
+        error._500(err, req, res);
     }
 };
 
