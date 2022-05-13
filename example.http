@@ -1,10 +1,10 @@
-#-------HOME
+#------------------------HOME 
 
 GET http://localhost:4100/
 
 ###
 
-#-------LIST
+# ----------------------------LIST
 GET http://localhost:4100/lists
 
 ###
@@ -17,4 +17,65 @@ GET http://localhost:4100/lists/2
 PATCH http://localhost:4100/lists/2
 
 ###
+PUT http://localhost:4100/lists/2
+
+###
 DELETE  http://localhost:4100/lists/12
+
+###
+
+# ---------------------------- TAG
+GET http://localhost:4100/tags
+
+###
+POST http://localhost:4100/tags
+
+###
+GET http://localhost:4100/tags/2
+
+###
+PATCH http://localhost:4100/tags/2
+
+###
+PUT http://localhost:4100/tags/2
+
+###
+DELETE  http://localhost:4100/tags/12
+
+
+# ------------------------------CARD
+
+###
+GET http://localhost:4100/cards
+###
+POST http://localhost:4100/cards
+###
+GET http://localhost:4100/cards/:id
+###
+PATCH  http://localhost:4100/cards/:id
+###
+DELETE http://localhost:4100/cards/:id
+
+
+# ----------------------------- USER
+
+###
+ GET http://localhost:4100/kanban/
+
+###
+GET http://localhost:4100/profile/
+
+###
+POST http://localhost:4100/signin/
+
+###
+POST http://localhost:4100/signup/
+
+###
+PATCH http://localhost:4100/profile/
+
+###
+DELETE http://localhost:4100/profile/
+
+###
+PUT http://localhost:4100/profile/

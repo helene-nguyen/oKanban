@@ -17,7 +17,7 @@ async function fetchAllLists(req, res) {
         error._500(err, req, res);
     }
 };
-//&=================ONE LISTS
+//&=================ONE LIST
 async function fetchOneList(req, res) {
     try {
         const list = await List.findByPk(2);
@@ -72,7 +72,7 @@ async function deleteList(req, res) {
     try {
         const deleteList = await List.destroy({
             where: {
-                id: 11
+                id: 17
             }
         });
 
@@ -82,6 +82,25 @@ async function deleteList(req, res) {
         error._500(err,req,res);
     }
 };
+//!TEST ZONE
+async function updateTest(req, res) {
+    try {
+        const list = await List.upsert(
+            {
+                title: `I'm a survivor`,
+                order: 1,
+                user_id:1
+            },
+            {
+                where: { id: 14 }
+            });
+
+        console.log(list);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
 
 
 export {
@@ -89,5 +108,6 @@ export {
     fetchOneList,
     createList,
     updateList,
-    deleteList
+    deleteList,
+    updateTest
 };
