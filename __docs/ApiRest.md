@@ -4,7 +4,7 @@ Mise en place API avec l'architecture REST
 
 ### Architecture REST
 
-**REST (Representational State Transfer) ou RESTful** est un style d’architecture permettant de construire des applications (Web, Intranet, Web Service). Il s’agit d’un ensemble de conventions et de bonnes pratiques à respecter et non d’une technologie à part entière. L’architecture REST utilise les spécifications originelles du **protocole HTTP**, plutôt que de réinventer une surcouche (comme le font SOAP ou XML-RPC par exemple).
+**REST (Representational State Transfer) ou RESTful** est un style d’architecture permettant de construire des applications (Web, Intranet, Web Service). Il s’agit d’un ensemble de conventions et de bonnes pratiques à respecter et non d’une technologie à part entière. L’architecture REST utilise les spécifications originelles du **protocole HTTP**, plutôt que de réinventer une surcouche (comme le font SOAP ou XML-RPC par exemple qui sont aussi d'autres architectures).
 
 - Règle n°1 : l’URI comme identifiant des ressources
 - Règle n°2 : les verbes HTTP comme identifiant des opérations
@@ -28,10 +28,6 @@ HTTP propose les verbes correspondant :
 - Mettre à jour (update) => **PUT** ou **PATCH**
 - Supprimer (delete) => **DELETE**
 
-
-
-
-
 Pour tester les routes, il existe plusieurs solutions, et la plus simple reste d'utiliser un petit logiciel :
 
 - [Insomnia](https://support.insomnia.rest/article/23-installation#ubuntu)
@@ -44,20 +40,52 @@ Pour tester les routes, il existe plusieurs solutions, et la plus simple reste d
 
 ---
 
+## Mise en place des routes
+
+Pour la gestion des routes, nous avons choisi de partir sur l'indexation des routes, nous avons séparés les différentes routes en fonction des différentes tables pour une gestion indépendantes des éléments.
+
+Pour la visualisation de l'index :
+
+```js
+//~import modules
+import { Router } from 'express';
+const router = Router();
+
+//~routers
+
+//main
+import { router as mainRouter } from './main.js';
+router.use(mainRouter);
+//list
+import { router as listRouter } from './list.js';
+router.use(listRouter);
+//card
+import { router as cardRouter } from './card.js';
+router.use(cardRouter);
+//tag
+import { router as tagRouter } from './tag.js';
+router.use(tagRouter);
+
+export { router };
+```
+
+On importe le module pour gérer les routes avec Express puis on importe les différentes routes.
+
+//TODO redaction utilisation des routes + controllers
+
+
+## Test des routes et gestion des données par les controllers
 
 
 Test des envois fait avec l'extension Rest-Client
 
 ```shell
 #-------HOME
-
 GET http://localhost:4100/
 
 ###
-
 #-------LIST
 GET http://localhost:4100/lists
-
 
 ###
 POST http://localhost:4100/lists

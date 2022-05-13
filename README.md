@@ -27,7 +27,7 @@ Nous avons utilisé les imports et exports par le biais d'*ES6 Module System* av
 
 ## API RESTful : phase de test de l'API en respectant l'architecture REST
 
-On cherche à définir les différentes routes en respectant l'architecture REST en suivnat les indications suivantes :
+On cherche à définir les différentes routes en respectant l'architecture REST en suivant les indications suivantes :
 
 # Routes
 
