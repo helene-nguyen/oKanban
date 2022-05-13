@@ -4,8 +4,7 @@ import * as error from './errorController.js';
 import {
     List,
     Card,
-    User,
-    Tag
+    User, Tag
 } from '../models/index.js';
 
 //~controller
@@ -16,7 +15,7 @@ async function fetchAllLists(req, res) {
             attributes: {
                 exclude: ['created_at', 'updated_at']
             },
-            //~Methode 1
+            //~Methode 1 en cherchant les models
             include: [{
                 model: Card,
                 as: 'cards',
@@ -31,26 +30,6 @@ async function fetchAllLists(req, res) {
                     exclude: ['id', 'avatar', 'email', 'password', 'created_at', 'updated_at']
                 }
             }]
-            //~Methode 2
-            /* include: [{
-                    association: 'cards',
-                    attributes: {
-                        exclude: ['id', 'order', 'user_id', 'list_id', 'color', 'created_at', 'updated_at']
-                    },
-                },
-                {
-                    association: 'user',
-                    attributes: {
-                        exclude: ['id', 'avatar', 'email', 'password', 'created_at', 'updated_at']
-                    }
-                }
-            ],
-            order: [
-                // je viens ordonner les listes par position croissante
-                ['order', 'ASC'],
-                // et les cards par position croissante
-                ['cards', 'order', 'ASC']
-            ] */
         });
 
         res.json(lists);
@@ -80,15 +59,13 @@ async function createList(req, res) {
 
         //Et seulement après on peut générér une liste
         // le .save() vient insérer en BDD notre objet, au retour, il vient mettre à jour l'id de celui-ci
-        let newList = List.build({
+      List.create({
             title: list.title,
             order: list.order,
             user_id: list.user_id
         });
 
-        await newList.save();
-
-        res.json(newList);
+        res.json(`La liste ${list.title} a bien été crée`);
 
     } catch (err) {
         error._500(err, req, res);
@@ -108,7 +85,8 @@ async function fetchOneList(req, res) {
                 model: Card,
                 as: "cards",
                 include: [{
-                    association: "tags"
+                    model: Tag,
+                    as: 'tags'
                 }]
             }],
             order: [
@@ -116,7 +94,6 @@ async function fetchOneList(req, res) {
                 ["cards", "order", "ASC"]
             ]
         });
-
         //on vérifie que la liste n'est pas vide
         if (!list) {
             return error._404(req, res, "Impossible to retreive the list with this id");
@@ -132,10 +109,10 @@ async function fetchOneList(req, res) {
 //&=================UPDATE LIST
 async function updateList(req, res) {
     try {
-        const listID = req.params.id;
+        const listId = req.params.id;
 
         //on récupère la liste en BDD
-        const list = await List.findByPk(listID);
+        const list = await List.findByPk(listId);
 
         //on vérifie si une liste a été trouvée
         if (!list) {
@@ -161,8 +138,8 @@ async function updateList(req, res) {
 //&=================DELETE LIST
 async function deleteList(req, res) {
     try {
-        const listID = req.params.id;
-        const list = await List.findByPk(listID);
+        const listId = req.params.id;
+        const list = await List.findByPk(listId);
 
         //on supprime en BDD
         await list.destroy();

@@ -191,6 +191,12 @@ async function fetchAllLists(req, res) {
 };
 ```
 
+Pour récupérer toutes les listes en incluant les tables associées, nous avons fait les tests avec 2 méthodes différentes.
+
+Les tests ont été fait avec [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) et la vitesse ainsi que la mémoire utilisée sont les mêmes pour les 2 méthodes.
+
+Nous avons choisi de partir sur la première méthode dans un soucis de clarté de lecture du code.
+
 ### CreateOneList
 
 - Pour créer une liste :
@@ -198,6 +204,8 @@ async function fetchAllLists(req, res) {
 ```js
 async function createList(req, res) {
     try {
+      //---------------------------------------------------------//
+      //~Méthode 1
         // je récupère ce qui est envoyé par la requête POST
         const list = req.body;
 
@@ -267,6 +275,8 @@ Pour la création de la liste, on compte 3 manières différentes de procéder q
         //merci Fredo pour la rédaction des méthodes :)
 ```
 
+Ces 3 méthodes permettent de créer une liste, testées toutes les 3 et approuvées ! Enfin, on a quand même décidé de partir sur la méthode **create( )** !
+
 ### FetchOneList
 
 - Pour récupérer une liste :
@@ -276,10 +286,10 @@ async function fetchOneList(req, res) {
     try {
 
         //On récupère l'id  paramètres de l'url(query string)
-        const listID = req.params.id;
+        const listId = req.params.id;
 
         //On récupère la liste en BDD via son id
-        const list = await List.findByPk(listID, {
+        const list = await List.findByPk(listId, {
             include: [{
                 association: "cards",
                 include: [{
@@ -305,6 +315,7 @@ async function fetchOneList(req, res) {
 };
 ```
 
+
 Pour cette étape, on va bien chercher l'élément en fonction de son id et les associations nous permettent d'avoir les informations que l'on souhaite afficher lors de l'envoi des données.
 
 On met en place avant l'envoi des données la condition d'existence d'une liste.
@@ -316,10 +327,13 @@ On met en place avant l'envoi des données la condition d'existence d'une liste.
 ```js
 async function updateList(req, res) {
     try {
-        const listID = req.params.id;
+        const listId = req.params.id;
+
+        //-------------------------------------------------//
+        //~Methode 1
 
         //on récupère la liste en BDD
-        const list = await List.findByPk(listID);
+        const list = await List.findByPk(listId);
 
         //on vérifie si une liste a été trouvée
         if (!list) {
@@ -338,13 +352,18 @@ async function updateList(req, res) {
 
         res.json(list);
 
+        //-------------------------------------------------------//
+        //~Methode 2
+
+        
+
     } catch (err) {
         error._500(err, req, res);
     }
 };
 ```
 
-Ici aussi on met les conditions d'existence que chaque élément à modifier et on indique ce qu'on souhaite
+Ici aussi on met les conditions d'existence pour chaque élément à modifier et on indique ce qu'on souhaite exclure
 
 - Pour supprimer une liste :
 
