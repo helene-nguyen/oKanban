@@ -26,7 +26,7 @@ Content-type: application/json
 # &user_id=1
 
 ###
-GET http://localhost:4100/lists/18
+GET http://localhost:4100/lists/8
 
 ###
 PATCH http://localhost:4100/lists/8
@@ -35,7 +35,7 @@ Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "title": "sample",
+    "title": "Methode update infos",
     "order": 9,
     "user_id": 1
 }

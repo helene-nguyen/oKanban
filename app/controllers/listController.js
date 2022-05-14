@@ -111,25 +111,14 @@ async function updateList(req, res) {
     try {
         const listId = req.params.id;
 
-        //on récupère la liste en BDD
-        const list = await List.findByPk(listId);
+        // ! Méthode 1 utilisation de UPDATE()
+        await List.update(
+            // l'ordre est important [values, conditions]
+            {...req.body },
+            { where: { id : listId } }
+        );
 
-        //on vérifie si une liste a été trouvée
-        if (!list) {
-            return error._404(req, res, "Impossible to retreive the list with this id");
-        };
-
-        if (req.body.title) { //on vérifie si on souhaite modifier le nom
-            list.title = req.body.title;
-        };
-
-        if (req.body.order) { //on vérifie si on souhaite modifier la order
-            list.order = req.body.order;
-        };
-        //puis on met à jour en BDD
-        await list.save();
-
-        res.json(list);
+        return res.json(`Les informations de la liste a bien été mise à jour`);
 
     } catch (err) {
         error._500(err, req, res);
@@ -141,7 +130,6 @@ async function deleteList(req, res) {
         const listId = req.params.id;
         const list = await List.findByPk(listId);
 
-        //on supprime en BDD
         await list.destroy();
 
         res.json(`List [ ${list.title} ] is deleted !`);

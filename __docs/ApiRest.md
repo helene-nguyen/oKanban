@@ -315,7 +315,6 @@ async function fetchOneList(req, res) {
 };
 ```
 
-
 Pour cette étape, on va bien chercher l'élément en fonction de son id et les associations nous permettent d'avoir les informations que l'on souhaite afficher lors de l'envoi des données.
 
 On met en place avant l'envoi des données la condition d'existence d'une liste.
@@ -335,12 +334,7 @@ async function updateList(req, res) {
         //on récupère la liste en BDD
         const list = await List.findByPk(listId);
 
-        //on vérifie si une liste a été trouvée
-        if (!list) {
-            return error._404(req, res, "Impossible to retreive the list with this id");
-        };
-
-        if (req.body.title) { //on vérifie si on souhaite modifier le nom
+         if (req.body.title) { //on vérifie si on souhaite modifier le nom
             list.title = req.body.title;
         };
 
@@ -354,8 +348,17 @@ async function updateList(req, res) {
 
         //-------------------------------------------------------//
         //~Methode 2
+        const listId = req.params.id;
 
-        
+        await List.update(
+            // l'ordre est important [values, conditions]
+            //spread operatornpm install @openapitools/openapi-generator-cli -g
+            {...req.body },
+            { where: { id : listId } }
+
+        );
+
+        return res.json(`Les informations de la liste a bien été mise à jour`);
 
     } catch (err) {
         error._500(err, req, res);
@@ -363,30 +366,106 @@ async function updateList(req, res) {
 };
 ```
 
-Ici aussi on met les conditions d'existence pour chaque élément à modifier et on indique ce qu'on souhaite exclure
+Ici aussi on met les conditions d'existence pour chaque élément à modifier et on indique ce qu'on souhaite exclure.
+
+On a 2 testé également 2 méthodes différentes pour mettre à jour notre liste si elle existe soit en passant par la recherche en fonction de l'Id, soit en passant par la fonction de mise à jour intégrée avec Sequelize avec **update( )**.
+
+Visualisation du test :
+
+![patch](./images/patch.gif)
 
 - Pour supprimer une liste :
 
+```js
+async function deleteList(req, res) {
+    try {
+        const listId = req.params.id;
+        const list = await List.findByPk(listId);
+
+        await list.destroy();
+
+        res.json(`List [ ${list.title} ] is deleted !`);
+
+    } catch (err) {
+        error._500(err, req, res);
+    }
+};
+```
+
+Pour la suppression, on utilisera **destroy( )**, pour le message de confirmation, on renvoie un JSON qui nous indiquera quelle liste a été supprimée.
+
 ### Test avec Insomnia
+
+Pour les tests avec Insomnia, voici un aperçu :
+
+![insmonia](./images/insomnia.png)
+
+On peut visualiser la requête souhaitée.
+
+Nous avons décidé de partir sur Rest Client qui est une extension de VSCode pour le côté pratique.
 
 ### Test avec l'extension Rest Client VSCode
 
-Test des envois fait avec l'extension Rest-Client
+L'utilisation de Rest Client se fait par l'intermédiaire d'un fichier .http.
 
-```shell
-#-------HOME
-GET http://localhost:4100/
+On fait les envois des requêtes directement et une page s'affichera pour visualiser la requête.
+
+Plusieurs requêtes peuvent être faites sur un même fichier, il suffit d'y ajouter un séparateur *'###'*.
+
+```text
+# ----------------------------LIST
 
 ###
-#-------LIST
 GET http://localhost:4100/lists
 
 ###
 POST http://localhost:4100/lists
+#format json
+Content-type: application/json
+#Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
+
+{
+    "title": "sample",
+    "order": 9,
+    "user_id": 1
+}
+
+#format urlencoded
+# Content-type: application/x-www-form-urlencoded
+
+# title=sample
+# &order=3
+# &user_id=1
+
+###
+GET http://localhost:4100/lists/8
+
+###
+PATCH http://localhost:4100/lists/8
+#format json
+Content-type: application/json
+#Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
+
+{
+    "title": "Methode update infos",
+    "order": 9,
+    "user_id": 1
+}
+
+###
+DELETE  http://localhost:4100/lists/24
 
 ```
 
-Affichage d'une liste
+Ici, on fait un test pour l'affichage d'une liste avec la méthode **GET**:
+
+```text
+###
+GET http://localhost:4100/lists/2
+```
+
+L'id qu'on recherche est bien 2, l'affichage du test est le suivant :
+
 
 ```js
 HTTP/1.1 200 OK
@@ -408,7 +487,7 @@ Connection: close
 }
 ```
 
-Affichage des listes :
+Autre exemple pour l'affichage des listes :
 
 ```js
 HTTP/1.1 200 OK
@@ -441,7 +520,9 @@ Connection: close
 ]
 ```
 
-Erreur qu'on peut trouver si on reset nos tables et qu'un utilisateur n'existe pas dans la table car nous avons imposé le fait que une liste ne peut exister qu'uniquement si un utilisateur existe :
+## ERROR (Oh noooo..)
+
+Attention, une erreur qu'on peut trouver si on reset nos tables et qu'un utilisateur n'existe pas dans la table car nous avons imposé le fait qu'une liste ne peut exister qu'uniquement si un utilisateur existe :
 
 Erreur dans le body :
 
@@ -449,7 +530,11 @@ Erreur dans le body :
 insert or update on table "list" violates foreign key constraint "list_user_id_fkey"
 ```
 
-Affichage des erreurs géré par notre errorController :
+Donc il faut bien vérifier ce qu'on a établit avant (ex: si on supprime un utilisateur, on a défini que toutes les listes se supprimeront avec etc.)
+
+### Erreurs gérés avec notre controller
+
+Un exemple d'affichage des erreurs géré par notre errorController :
 
 ```js
 function _500(err, req, res) { res.status(500).json({"Server Error 500": err.message});
@@ -469,8 +554,9 @@ Connection: close
   "Server Error 500": "une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »"
 }
 ```
+### Gestion des erreurs 
 
-Pour lancer une erreur, ne pas oublier de créer la nouvelle erreur avec throw new Error :
+Pour *catch* notre erreur, ne pas oublier de créer la nouvelle erreur avec `throw new Error` :
 
 ```js
      if (!list.title) {
@@ -479,14 +565,16 @@ Pour lancer une erreur, ne pas oublier de créer la nouvelle erreur avec throw n
 ;
 ```
 
-Pour les test avec l'extension Rest Client, le format du body doit être écrit de la manière suivante selon des règles très strictes :
+### Ecriture pour les tests 
+
+Pour la récupération des données en passant par *req.body*, avec l'extension Rest Client, le format du body doit être écrit de la manière suivante selon des règles très strictes :
 
 ```shell
 
 POST http://localhost:4100/lists
 #format json
 Content-type: application/json
-#Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
+#Très strict le format d'écriture pour le test, espace avant application et saut à la ligne !!!
 
 {
     "title": "sample",
@@ -494,5 +582,7 @@ Content-type: application/json
     "user_id": 1
 }
 ```
+
+Et voilà ! Notre API est RESTful, on respecte bien l'architecture REST, on sépare bien chaque fonctionnalités !
 
 [Retour à l'accueil](/README.md)
