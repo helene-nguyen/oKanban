@@ -52,7 +52,9 @@ async function createList(req, res) {
         assert.ok(req.body.order, 'La position de la liste doit être précisée');
         assert.ok(req.body.user_id, `L'utilisateur doit être identifié`);
 
-        List.create({ ...req.body });
+        List.create({
+            ...req.body
+        });
 
         res.json(`La liste ${req.body.title} a bien été crée`);
 
@@ -64,14 +66,14 @@ async function createList(req, res) {
 //&=================ONE LIST
 async function fetchOneList(req, res) {
     try {
-        
+
         const listId = Number(req.params.id);
-        
-        assert.ok(!listId, `Aucune liste n'a été trouvée !`);
+
+
         //On récupère la liste en DB via son id
         const list = await List.findByPk(listId, {
             attributes: {
-                exclude: ['id', 'order', 'user_id','created_at', 'updated_at']
+                exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
             },
             include: [{
                 model: Card,
@@ -87,9 +89,13 @@ async function fetchOneList(req, res) {
                     }
                 }]
             }],
-            order: [["cards", "order", "ASC"] ]
+            order: [
+                ["cards", "order", "ASC"]
+            ]
         });
-   
+        
+        assert.ok(list, `Aucune liste n'a été trouvée !`);
+
         res.json(list);
 
     } catch (err) {
@@ -103,8 +109,13 @@ async function updateList(req, res) {
         // ! Méthode 1 utilisation de UPDATE()
         await List.update(
             // l'ordre est important [values, conditions]
-            { ...req.body },
-            { where: {...req.params }}
+            {
+                ...req.body
+            }, {
+                where: {
+                    ...req.params
+                }
+            }
         );
 
         return res.json(`Les informations de la liste a bien été mise à jour`);
@@ -116,7 +127,11 @@ async function updateList(req, res) {
 //&=================DELETE LIST
 async function deleteList(req, res) {
     try {
-        await List.destroy({where: {...req.params}});
+        await List.destroy({
+            where: {
+                ...req.params
+            }
+        });
 
         res.json(`La liste a bien été supprimée !`);
 

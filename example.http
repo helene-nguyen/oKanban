@@ -43,24 +43,34 @@ Content-type: application/json
 ###
 DELETE  http://localhost:4100/lists/5
 
+
 # ---------------------------- TAG
 ###
 GET http://localhost:4100/tags
 
 ###
 POST http://localhost:4100/tags
+Content-type: application/json
+
+{
+    "name": "Gtn Color"
+}
 
 ###
-GET http://localhost:4100/tags/2
+GET http://localhost:4100/tags/1
 
 ###
-PATCH http://localhost:4100/tags/2
+PATCH http://localhost:4100/tags/15
+Content-type: application/json
 
+{
+    "name": "Fredo Color"
+}
 ###
 PUT http://localhost:4100/tags/2
 
 ###
-DELETE  http://localhost:4100/tags/24
+DELETE  http://localhost:4100/tags/14
 
 
 # ------------------------------CARD
