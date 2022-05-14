@@ -1,10 +1,12 @@
 //~import modules
 import * as error from './errorController.js';
+import assert from 'assert';
 
 import {
     List,
     Card,
-    User, Tag
+    User,
+    Tag
 } from '../models/index.js';
 
 //~controller
@@ -29,7 +31,11 @@ async function fetchAllLists(req, res) {
                 attributes: {
                     exclude: ['id', 'avatar', 'email', 'password', 'created_at', 'updated_at']
                 }
-            }]
+            }],
+            order: [
+                ['order', 'ASC'],
+                ['cards', 'order', 'ASC']
+            ]
         });
 
         res.json(lists);
@@ -42,30 +48,13 @@ async function fetchAllLists(req, res) {
 //&=================CREATE LIST
 async function createList(req, res) {
     try {
-        // je récupère ce qui est envoyé par la requête POST
-        const list = req.body;
+        assert.ok(req.body.title, 'Le nom de la liste doit être précisé');
+        assert.ok(req.body.order, 'La position de la liste doit être précisée');
+        assert.ok(req.body.user_id, `L'utilisateur doit être identifié`);
 
-        //on met en place les conditions pour renvoyer les erreurs si ce qui ne doit pas être NULL doit être rempli
-        if (!list.title) {
-            throw new Error("Le nom de la liste doit être précisé");
-        };
-        if (!list.order) {
-            throw new Error("La position de la liste doit être précisée");
-        }
+        List.create({ ...req.body });
 
-        if (!list.user_id) {
-            throw new Error("L'utilisateur doit être identifié");
-        }
-
-        //Et seulement après on peut générér une liste
-        // le .save() vient insérer en BDD notre objet, au retour, il vient mettre à jour l'id de celui-ci
-      List.create({
-            title: list.title,
-            order: list.order,
-            user_id: list.user_id
-        });
-
-        res.json(`La liste ${list.title} a bien été crée`);
+        res.json(`La liste ${req.body.title} a bien été crée`);
 
     } catch (err) {
         error._500(err, req, res);
@@ -75,30 +64,32 @@ async function createList(req, res) {
 //&=================ONE LIST
 async function fetchOneList(req, res) {
     try {
-
-        //On récupère l'id  paramètres de l'url(query string)
-        const listID = req.params.id;
-
-        //On récupère la liste en BDD via son id
-        const list = await List.findByPk(listID, {
+        
+        const listId = Number(req.params.id);
+        
+        assert.ok(!listId, `Aucune liste n'a été trouvée !`);
+        //On récupère la liste en DB via son id
+        const list = await List.findByPk(listId, {
+            attributes: {
+                exclude: ['id', 'order', 'user_id','created_at', 'updated_at']
+            },
             include: [{
                 model: Card,
                 as: "cards",
+                attributes: {
+                    exclude: ['id', 'user_id', 'list_id', 'created_at', 'updated_at']
+                },
                 include: [{
                     model: Tag,
-                    as: 'tags'
+                    as: 'tags',
+                    attributes: {
+                        exclude: ['id', 'created_at', 'updated_at']
+                    }
                 }]
             }],
-            order: [
-                // les cards par position croissante
-                ["cards", "order", "ASC"]
-            ]
+            order: [["cards", "order", "ASC"] ]
         });
-        //on vérifie que la liste n'est pas vide
-        if (!list) {
-            return error._404(req, res, "Impossible to retreive the list with this id");
-        };
-
+   
         res.json(list);
 
     } catch (err) {
@@ -109,13 +100,11 @@ async function fetchOneList(req, res) {
 //&=================UPDATE LIST
 async function updateList(req, res) {
     try {
-        const listId = req.params.id;
-
         // ! Méthode 1 utilisation de UPDATE()
         await List.update(
             // l'ordre est important [values, conditions]
-            {...req.body },
-            { where: { id : listId } }
+            { ...req.body },
+            { where: {...req.params }}
         );
 
         return res.json(`Les informations de la liste a bien été mise à jour`);
@@ -127,12 +116,9 @@ async function updateList(req, res) {
 //&=================DELETE LIST
 async function deleteList(req, res) {
     try {
-        const listId = req.params.id;
-        const list = await List.findByPk(listId);
+        await List.destroy({where: {...req.params}});
 
-        await list.destroy();
-
-        res.json(`List [ ${list.title} ] is deleted !`);
+        res.json(`La liste a bien été supprimée !`);
 
     } catch (err) {
         error._500(err, req, res);

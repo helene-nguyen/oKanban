@@ -13,8 +13,8 @@ Content-type: application/json
 #Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
 
 {
-    "title": "sample",
-    "order": 9,
+    "title": "Fredo",
+    "order": 15,
     "user_id": 1
 }
 
@@ -26,22 +26,22 @@ Content-type: application/json
 # &user_id=1
 
 ###
-GET http://localhost:4100/lists/8
+GET http://localhost:4100/lists/5
 
 ###
-PATCH http://localhost:4100/lists/8
+PATCH http://localhost:4100/lists/5
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "title": "Methode update infos",
+    "title": "UPDATE",
     "order": 9,
     "user_id": 1
 }
 
 ###
-DELETE  http://localhost:4100/lists/24
+DELETE  http://localhost:4100/lists/5
 
 # ---------------------------- TAG
 ###

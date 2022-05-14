@@ -1,6 +1,6 @@
 //~import modules
 import {
-    Card
+    Card, Tag
 } from '../models/index.js';
 import {
     _500
@@ -43,7 +43,13 @@ async function fetchOneCard(req, res) {
     try {
 
         const id = 1;
-        const oneCard = await Card.findByPk(id);
+
+        const oneCard = await Card.findByPk(id, {
+            include: {
+                model: Tag,
+                association: 'tags'
+            }
+        });
 
         res.json(oneCard)
 
