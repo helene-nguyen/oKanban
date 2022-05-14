@@ -68,8 +68,6 @@ async function fetchOneList(req, res) {
     try {
 
         const listId = Number(req.params.id);
-
-
         //On récupère la liste en DB via son id
         const list = await List.findByPk(listId, {
             attributes: {
@@ -93,7 +91,7 @@ async function fetchOneList(req, res) {
                 ["cards", "order", "ASC"]
             ]
         });
-        
+
         assert.ok(list, `Aucune liste n'a été trouvée !`);
 
         res.json(list);

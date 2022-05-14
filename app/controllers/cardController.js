@@ -13,24 +13,11 @@ import {
 //&=================ALL CARDS
 async function fetchAllCards(req, res) {
     try {
-        const allCards = await Card.findAll({attributes: {
-            exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
-        },
-        include: [{
-                model: List,
-                as: 'list',
-                attributes: {
-                    exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
-                }
-            },
-            {
-                model: Tag,
-                as: 'tags',
-                attributes: {
-                    exclude: ['id', 'created_at', 'updated_at']
-                }
+        const allCards = await Card.findAll({
+            attributes: {
+                exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
             }
-        ]});
+        });
 
         res.json(allCards);
 
@@ -45,7 +32,9 @@ async function createCard(req, res) {
         assert.ok(req.body.order, 'La position de la carte doit être précisée');
         assert.ok(req.body.description, 'La description doit être précisé');
 
-        Card.create({ ...req.body});
+        Card.create({
+            ...req.body
+        });
 
         res.json(`La carte ${req.body.title} a bien été crée`);
 
@@ -58,25 +47,11 @@ async function fetchOneCard(req, res) {
     try {
         const cardId = Number(req.params.id);
 
-        const oneCard = await Card.findByPk(cardId, {
+        const oneCard = await Card.findOne({
+            where: { id: cardId },
             attributes: {
-                exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
-            },
-            include: [{
-                    model: List,
-                    as: 'list',
-                    attributes: {
-                        exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
-                    }
-                },
-                {
-                    model: Tag,
-                    as: 'tags',
-                    attributes: {
-                        exclude: ['id', 'created_at', 'updated_at']
-                    }
-                }
-            ]
+                exclude: ['id', 'order', 'list_id', 'created_at', 'updated_at']
+            }
         });
 
         res.json(oneCard)
@@ -122,11 +97,44 @@ async function deleteCard(req, res) {
     }
 };
 
+async function fetchAllCardsByListId(req, res) {
+    try {
+        const listId = req.params.id;
+
+        const allCardByListId = await Card.findByPk(listId, {
+            attributes: {
+                exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
+            },
+            include: [{
+                    model: List,
+                    as: 'list',
+                    attributes: {
+                        exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
+                    }
+                },
+                {
+                    model: Tag,
+                    as: 'tags',
+                    attributes: {
+                        exclude: ['id', 'created_at', 'updated_at']
+                    }
+                }
+            ]
+        });
+
+        res.json(allCardByListId);
+
+
+    } catch (err) {
+        _500(err, req, res);
+    }
+};
 
 export {
     fetchAllCards,
     createCard,
     fetchOneCard,
     updateCard,
-    deleteCard
+    deleteCard,
+    fetchAllCardsByListId
 };
