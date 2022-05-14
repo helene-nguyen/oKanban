@@ -24,16 +24,16 @@ VALUES
 
 INSERT INTO "list"("title", "order", "description", "user_id")
 VALUES
-    ('Todo','1','Les choses à faire','1'),
-    ('Mon Combat','2','Toujours en cours','1'),
-    ('Titre Utilisateur 2','1','Ptite description','2'),
-    ('Le dev c''est vraiment cool !','1','Mais attention aux coups de soleil ;)','3');
+    ('Todo',1,'Les choses à faire',1),
+    ('Mon Combat',2,'Toujours en cours',1),
+    ('Titre Utilisateur 2',1,'Ptite description',2),
+    ('Le dev c''est vraiment cool !',1,'Mais attention aux coups de soleil ;)',3);
 
 INSERT INTO "card"("title", "order", "color", "description", "user_id", "list_id")
 VALUES
-    ('Title Card 1','1','#FFF','Les choses à faire','1', '1'),
-    ('Title Card 1','1','#FFF','Les choses à faire','2', '1'),
-    ('Title Card 1','1','#FFF','Les choses à faire','3', '1');
+    ('Title Card 1',1,'#FFF','Les choses à faire',1, 1),
+    ('Title Card 1',1,'#FFF','Les choses à faire',2, 1),
+    ('Title Card 1',1,'#FFF','Les choses à faire',3, 1);
 
 INSERT INTO "card_has_tag"("card_id", "tag_id") VALUES
 (1,1),

@@ -466,7 +466,6 @@ GET http://localhost:4100/lists/2
 
 L'id qu'on recherche est bien 2, l'affichage du test est le suivant :
 
-
 ```js
 HTTP/1.1 200 OK
 X-Powered-By: Express
@@ -554,7 +553,8 @@ Connection: close
   "Server Error 500": "une valeur NULL viole la contrainte NOT NULL de la colonne « order » dans la relation « list »"
 }
 ```
-### Gestion des erreurs 
+
+### Gestion des erreurs
 
 Pour *catch* notre erreur, ne pas oublier de créer la nouvelle erreur avec `throw new Error` :
 
@@ -565,7 +565,7 @@ Pour *catch* notre erreur, ne pas oublier de créer la nouvelle erreur avec `thr
 ;
 ```
 
-### Ecriture pour les tests 
+### Ecriture pour les tests
 
 Pour la récupération des données en passant par *req.body*, avec l'extension Rest Client, le format du body doit être écrit de la manière suivante selon des règles très strictes :
 

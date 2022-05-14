@@ -14,5 +14,4 @@ router.delete('/cards/:id', deleteCard);
 
 router.get('/lists/:id/cards', fetchAllCardsByListId);
 
-
 export {router};

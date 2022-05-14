@@ -19,8 +19,10 @@ router.post('/tags', createTag);
 
 router.get('/tags/:id', fetchOneTag);
 router.patch('/tags/:id',updateTag);
-router.put('/tags/:id', upsertTag);
 router.delete('/tags/:id', deleteTag);
+
+router.put('/cards/:card_id/tags/:tag_id', upsertTag);
+router.delete('/cards/:card_id/tags/:tag_id');
 
 export {
     router
