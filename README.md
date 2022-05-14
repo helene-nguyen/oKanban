@@ -29,7 +29,7 @@ Nous avons utilisé les imports et exports par le biais d'*ES6 Module System* av
 
 On cherche à définir les différentes routes en respectant l'architecture REST en suivant les indications suivantes :
 
-# Routes
+# Routes 
 
 | URL | GET | POST | PATCH | DELETE | PUT |
 |---|---|---|---|---|---|
@@ -43,6 +43,38 @@ On cherche à définir les différentes routes en respectant l'architecture REST
 | `/tags/:id` | récupérer UN label via son ID | créer un label en fixant son id d'avance (❌) | mettre à jour un label via son ID | supprimer un label via son ID | remplacer entièrement un label
 
 (❌) = ne pas faire
+
+### Listes
+
+[Voir specifications](../resources/api-endpoints-specifications.md)
+
+### Cartes
+
+En vous inspirant des spécifications sur les listes, mettre en place les routes suivantes :
+
+| VERB | PATH | DESCRIPTION |
+|--|--|--|
+| `GET` | `/cards` | renvoie toutes les cartes existantes. |
+| `GET` | `/cards/:id` | renvoie les détails de la carte demandée, avec les tags qui lui sont associés. |
+| `POST` | `/cards` | crée une nouvelle carte (sans tags) et la retourne. |
+| `PATCH` | `/cards/:id` | modifie une carte (ne modifie pas les tags). |
+| `DELETE` | `cards/:id` | supprime une carte. |
+| |
+| `GET` | `/lists/:id/cards` | renvoie toutes les cartes d'une liste. Chaque carte doit porter les tags qui lui sont associés. |
+
+### Tags
+
+En vous inspirant des spécifications sur les listes, mettre en place les routes suivantes :
+
+| VERB | PATH | DESCRIPTION |
+|--|--|--|
+| `GET` | `/tags` | renvoie tous les tags.
+| `POST` | `/tags` | crée un nouveau tag.
+| `PATCH` | `/tags/:id` | modifie un tag.
+| `DELETE` | `/tags/:id` | supprime un tag.
+| |
+| `PUT` | `/cards/:card_id/tags/:tag_id` | associe un tag à la carte ciblée. Note : si on appelle plusieurs fois cette route, l'association ne doit être présent qu'une fois en base.
+| `DELETE` | `/cards/:card_id/tags/:tag_id` | supprime l'as
 
 
 Tout de détail de notre implémentation c'est par [ici](./__docs/ApiRest.md) !

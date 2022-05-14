@@ -61,13 +61,8 @@ async function updateTag(req, res) {
     try {
         await Tag.update(
             // l'ordre est important [values, conditions]
-            {
-                ...req.body
-            }, {
-                where: {
-                    ...req.params
-                }
-            }
+            { ...req.body },
+            { where: {...req.params}}
         );
 
         return res.json(`Les informations du label a bien été mis à jour`);

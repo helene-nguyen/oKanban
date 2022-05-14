@@ -1,6 +1,9 @@
 //~import modules
+import assert from 'assert';
 import {
-    Card, Tag
+    Card,
+    Tag,
+    List
 } from '../models/index.js';
 import {
     _500
@@ -9,10 +12,26 @@ import {
 //~controllers
 //&=================ALL CARDS
 async function fetchAllCards(req, res) {
-
     try {
+        const allCards = await Card.findAll({attributes: {
+            exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
+        },
+        include: [{
+                model: List,
+                as: 'list',
+                attributes: {
+                    exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
+                }
+            },
+            {
+                model: Tag,
+                as: 'tags',
+                attributes: {
+                    exclude: ['id', 'created_at', 'updated_at']
+                }
+            }
+        ]});
 
-        const allCards = await Card.findAll();
         res.json(allCards);
 
     } catch (err) {
@@ -21,17 +40,14 @@ async function fetchAllCards(req, res) {
 };
 //&=================CREATE CARD
 async function createCard(req, res) {
-
     try {
-        const card = await Card.create({
-            title: 'Card -> Survivor',
-            order: 1,
-            description: 'On part en guerre !',
-            color: '#FFF',
-            user_id: 1,
-            list_id: 8,
-        })
-        res.json(card)
+        assert.ok(req.body.title, 'Le nom de la carte doit être précisé');
+        assert.ok(req.body.order, 'La position de la carte doit être précisée');
+        assert.ok(req.body.description, 'La description doit être précisé');
+
+        Card.create({ ...req.body});
+
+        res.json(`La carte ${req.body.title} a bien été crée`);
 
     } catch (err) {
         _500(err, req, res);
@@ -39,16 +55,28 @@ async function createCard(req, res) {
 };
 //&=================ONE CARD
 async function fetchOneCard(req, res) {
-
     try {
+        const cardId = Number(req.params.id);
 
-        const id = 1;
-
-        const oneCard = await Card.findByPk(id, {
-            include: {
-                model: Tag,
-                association: 'tags'
-            }
+        const oneCard = await Card.findByPk(cardId, {
+            attributes: {
+                exclude: ['id', 'order', 'user_id', 'list_id', 'created_at', 'updated_at']
+            },
+            include: [{
+                    model: List,
+                    as: 'list',
+                    attributes: {
+                        exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
+                    }
+                },
+                {
+                    model: Tag,
+                    as: 'tags',
+                    attributes: {
+                        exclude: ['id', 'created_at', 'updated_at']
+                    }
+                }
+            ]
         });
 
         res.json(oneCard)
@@ -60,23 +88,18 @@ async function fetchOneCard(req, res) {
 //&================= UPDATE CARD
 async function updateCard(req, res) {
     try {
-
-        const update = await Card.update(
-
-            //! Attention l'ordre est important [values, conditions]
-            // pour un update ou un upsert
-            // On a dans un premier temps les Values 
+        await Card.update(
+            // l'ordre est important [values, conditions]
             {
-                title: 'Trop content !!!!!'
-            },
-            // Dans un second temps les conditions
-            {
+                ...req.body
+            }, {
                 where: {
-                    id: 1
+                    ...req.params
                 }
-            },
+            }
         );
-        console.log(update);
+
+        return res.json(`Les informations de la carte ont bien été mises à jour`);
 
     } catch (err) {
         _500(err, req, res);
@@ -86,13 +109,13 @@ async function updateCard(req, res) {
 //&=================DELETE CARD
 async function deleteCard(req, res) {
     try {
-
-        const cardDestroy = await Card.destroy({
+        await Card.destroy({
             where: {
-                id: 2
+                ...req.params
             }
         });
-        console.log('Card DESTROY -----', cardDestroy)
+
+        res.json(`La carte a bien été supprimée !`);
 
     } catch (err) {
         _500(err, req, res);

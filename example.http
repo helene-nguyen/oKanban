@@ -79,12 +79,26 @@ DELETE  http://localhost:4100/tags/14
 GET http://localhost:4100/cards
 ###
 POST http://localhost:4100/cards
+Content-type: application/json
+
+{
+    "title": "Gtn Card",
+    "order": 4,
+    "description":"Lipalenonsix",
+    "user_id":1,
+    "list_id":1
+}
 ###
-GET http://localhost:4100/cards/:id
+GET http://localhost:4100/cards/1
 ###
-PATCH  http://localhost:4100/cards/:id
+PATCH  http://localhost:4100/cards/7
+Content-type: application/json
+
+{
+    "title": "Fredo Card"
+}
 ###
-DELETE http://localhost:4100/cards/:id
+DELETE http://localhost:4100/cards/6
 
 
 # ----------------------------- USER
