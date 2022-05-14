@@ -36,7 +36,7 @@ async function createList(req, res) {
         assert.ok(req.body.order, 'La position de la liste doit être précisée');
         assert.ok(req.body.user_id, `L'utilisateur doit être identifié`);
 
-        List.create({
+        await List.create({
             ...req.body
         });
 

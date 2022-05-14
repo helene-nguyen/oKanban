@@ -102,36 +102,15 @@ async function deleteTag(req, res) {
 async function upsertTag(req, res) {
     try {
 
-        const cardId = req.params.card_id;
-        const tagId = req.params.tag_id;
+        const cardId = req.params.card_id; //1
+        const tagId = req.params.tag_id; //10
 
-        const tagOnCardById = await Tag.upsert({
-            tag_id: tagId,
-            include: {
-                model: Card,
-                as: 'cards'
-            }, 
-            where: {card_id: cardId}
-        });
-       /*  const tag = await Tag.update({
-            id: 24,
-            name: 'try upsert 6'
-        }); */
-
-/*         const tags = await Tag.findAll({
-            attributes: {
-                exclude: ['id', 'created_at', 'updated_at']
-            },
-            include: {
-                model: Card,
-                as: 'cards',
-                attributes: {
-                    exclude: ['id', 'order', 'description', 'user_id', 'list_id', 'created_at', 'updated_at']
-                }
-            },
-            order: ['name', 'ASC']
-        }); */
-
+        const tagOnCardById = await Tag.create({
+                tag_id: tagId, //10
+                card_id: cardId, //1
+            }
+        );
+ 
         //REMOVE 
         res.json(tagOnCardById);
 

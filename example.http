@@ -77,7 +77,8 @@ Content-type: application/json
 {
     "name": "Fredo Color"
 }
-# ------------------------------CARD
+
+# ------------------------------ CARD
 
 ###
 GET http://localhost:4100/cards
