@@ -9,8 +9,10 @@ import {
     fetchOneTag,
     createTag,
     updateTag,
-    upsertTag,
-    deleteTag
+    deleteTag,
+    deleteAsWithTag,
+    fetchAllTagsByCardId,
+    addAsWithTag
 } from '../controllers/tagController.js'
 
 //^================TAG
@@ -21,8 +23,12 @@ router.get('/tags/:id', fetchOneTag);
 router.patch('/tags/:id',updateTag);
 router.delete('/tags/:id', deleteTag);
 
-router.put('/cards/:card_id/tags/:tag_id', upsertTag);
-router.delete('/cards/:card_id/tags/:tag_id');
+router.put('/cards/:cardId/tags/:tagId', addAsWithTag);
+// router.put('/cards/:cardId/tags/:tagName', addAsWithTag);
+
+router.delete('/cards/:cardId/tags/:tagId', deleteAsWithTag);
+
+router.get('/cards/:id/tags', fetchAllTagsByCardId)
 
 export {
     router

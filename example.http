@@ -71,12 +71,16 @@ Content-type: application/json
 DELETE  http://localhost:4100/tags/15
 
 ###
-PUT http://localhost:4100/cards/1/tags/10
-Content-type: application/json
+PUT http://localhost:4100/cards/1/tags/autre
 
-{
-    "name": "Fredo Color"
-}
+###
+PUT http://localhost:4100/cards/1/tags/4
+
+###
+DELETE http://localhost:4100/cards/1/tags/10
+
+###
+ GET http://localhost:4100/cards/1/tags
 
 # ------------------------------ CARD
 

@@ -31,9 +31,9 @@ VALUES
 
 INSERT INTO "card"("title", "order", "color", "description", "user_id", "list_id")
 VALUES
-    ('Title Card 1',1,'#FFF','Les choses à faire',1, 1),
-    ('Title Card 1',1,'#FFF','Les choses à faire',2, 1),
-    ('Title Card 1',1,'#FFF','Les choses à faire',3, 1);
+    ('1 Title Card 1',1,'#FFF','Les choses à faire',1, 1),
+    ('2 Title Card 1',1,'#FFF','Les choses à faire',2, 1),
+    ('3 Title Card 1',1,'#FFF','Les choses à faire',3, 1);
 
 INSERT INTO "card_has_tag"("card_id", "tag_id") VALUES
 (1,1),

@@ -144,7 +144,6 @@ async function deleteCard(req, res){
 };
 
 // ~ ------------------------------------------------ FETCH ALL CARDS BY LIST ID
-// ~ ------------------------------------------------ FETCH ALL CARDS BY LIST ID
 
 // Cette fonction permet de retourner toutes les cartes lié,
 // ayant pour référence l'id de la liste donné dans le placeholder [:id]
