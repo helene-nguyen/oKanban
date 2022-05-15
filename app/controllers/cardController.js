@@ -144,46 +144,36 @@ async function deleteCard(req, res){
 };
 
 // ~ ------------------------------------------------ FETCH ALL CARDS BY LIST ID
+// ~ ------------------------------------------------ FETCH ALL CARDS BY LIST ID
 
-// Cette fonction permet de retourner toutes les cartes et leurs tags,
-// ayant pour référence l'id d'une liste (situé dans le placeholder de la requête)
+// Cette fonction permet de retourner toutes les cartes lié,
+// ayant pour référence l'id de la liste donné dans le placeholder [:id]
 // ( requête GET http://[adress]/lists/[:id]/cards )
 async function fetchAllCardsByListId(req, res){
 
-try {
+    try {
 
-    // Récupération de l'id
-    const allCardsByListId = Number(req.params.id);
-    
-    // Utilisation de findByPK cherche une seule entrée de la table avec la clé primaire fournie
-    const allCards = await Card.findByPk(allCardsByListId,{
-        attributes : {
-            exclude: ['id', 'order', 'user_id', 'list_id','created_at', 'updated_at']
-        },
-        // On inclus les models nécessaires qui sont lié au model Card
-        include : [
-            {
-                model : List, 
-                as : 'list',
-                attributes : {
-                    exclude : ['id', 'order', 'user_id', 'created_at', 'updated_at']
-                }
-            },{
-                model : Tag,
-                as : 'tags',
-                attributes : {
-                    exclude : ['id', 'created_at', 'updated_at']
-                }
-            },
-        ]
-    });
-    // On affiche avec json notre résultat
-    res.json(allCards);
+        // Récupération de l'id
+        const listId = Number(req.params.id);
+        // Vérification si c'est un nombre ou non
+        assert.ok(!isNaN(listId), 'Chemin non conforme');
+            
+        const fetchOneList = await List.findOne({
+            where: { id : listId }
+        });
+        // Si fetchOneList n'existe pas alors on force l'erreur
+        assert.ok(fetchOneCard, `La liste n'existe pas`);
 
-} catch (err) {
-    _500(err, req, res);
-}
+        // on récupère tout les cards lié a la list trouvé
+        const allCards = await fetchOneList.getCards()
 
+        // On affiche avec json notre résultat
+        res.json(allCards);
+
+  
+    } catch (err) {
+        _500(err, req, res);
+    }
 };
 
 // on export toutes nos fonctions
