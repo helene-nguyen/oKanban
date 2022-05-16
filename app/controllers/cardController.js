@@ -1,13 +1,13 @@
 // ~ IMPORTATIONS
 import {
     Card,
-    Tag,
     List
 } from '../models/index.js';
 import {
     _500
 } from './errorController.js';
 import assert from 'assert';
+import {isValidHexadecimalColor} from './utils/utils.js';
 
 // ~ FUNCTIONS
 // ~ ------------------------------------------------ FETCH ALL CARDS
@@ -32,7 +32,6 @@ async function fetchAllCards(req, res) {
     } catch (err) {
         _500(err, req, res);
     }
-
 };
 
 // ~ ------------------------------------------------ CREATE CARD
@@ -50,6 +49,7 @@ async function createCard(req, res) {
         assert.ok(req.body.title && req.body.order, `Le nom ou la position de la carte doit être précisé`);
         assert.ok(!isNaN(req.body.order), `La position doit être un nombre`);
         assert.ok(req.body.description, `La description de la carte doit être précisée`);
+        assert.ok(isValidHexadecimalColor(req.body.color), `Invalid type: position should be a valid hexadecimal code (string)`);
 
         // L'utilisation du spread opérateur nous permet de récupéré tout les champs nécessaires,
         // sans avoir besoin de crée d'étape intermédiaire lors de la création d'une carte,
@@ -105,6 +105,7 @@ async function updateCard(req, res) {
         assert.ok(req.body.title && req.body.order, `Le nom ou la position de la carte doit être précisé`);
         assert.ok(!isNaN(req.body.order), `La position doit être un nombre`);
         assert.ok(req.body.description, `La description de la carte doit être précisée`);
+        assert.ok(isValidHexadecimalColor(req.body.color), `Invalid type: position should be a valid hexadecimal code (string)`);
         // L'utilisation de la méthode update() permet la mise à jours des
         // informations de la carte
         await Card.update(
