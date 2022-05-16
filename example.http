@@ -1,13 +1,14 @@
-#------------------------HOME 
-GET http://localhost:4100/
+@entryPoint = http://localhost:4100
 
+#------------------------HOME 
+GET {{entryPoint}}
 
 # ----------------------------LIST
 ###
-GET http://localhost:4100/lists
+GET {{entryPoint}}/lists
 
 ###
-POST http://localhost:4100/lists
+POST {{entryPoint}}/lists
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
@@ -26,10 +27,10 @@ Content-type: application/json
 # &user_id=1
 
 ###
-GET http://localhost:4100/lists/1
+GET {{entryPoint}}/lists/1
 
 ###
-PATCH http://localhost:4100/lists/5
+PATCH {{entryPoint}}/lists/5
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
@@ -41,15 +42,15 @@ Content-type: application/json
 }
 
 ###
-DELETE  http://localhost:4100/lists/5
+DELETE  {{entryPoint}}/lists/5
 
 
 # ---------------------------- TAG
 ###
-GET http://localhost:4100/tags
+GET {{entryPoint}}/tags
 
 ###
-POST http://localhost:4100/tags
+POST {{entryPoint}}/tags
 Content-type: application/json
 
 {
@@ -57,10 +58,10 @@ Content-type: application/json
 }
 
 ###
-GET http://localhost:4100/tags/10
+GET {{entryPoint}}/tags/10
 
 ###
-PATCH http://localhost:4100/tags/16
+PATCH {{entryPoint}}/tags/16
 Content-type: application/json
 
 {
@@ -68,26 +69,26 @@ Content-type: application/json
 }
 
 ###
-DELETE  http://localhost:4100/tags/15
+DELETE  {{entryPoint}}/tags/15
 
 ###
-PUT http://localhost:4100/cards/1/tags/autre
+PUT {{entryPoint}}/cards/1/tags/autre
 
 ###
-PUT http://localhost:4100/cards/1/tags/4
+PUT {{entryPoint}}/cards/1/tags/4
 
 ###
-DELETE http://localhost:4100/cards/1/tags/10
+DELETE {{entryPoint}}/cards/1/tags/10
 
 ###
- GET http://localhost:4100/cards/1/tags
+ GET {{entryPoint}}/cards/1/tags
 
 # ------------------------------ CARD
 
 ###
-GET http://localhost:4100/cards
+GET {{entryPoint}}/cards
 ###
-POST http://localhost:4100/cards
+POST {{entryPoint}}/cards
 Content-type: application/json
 
 {
@@ -98,40 +99,41 @@ Content-type: application/json
     "list_id":1
 }
 ###
-GET http://localhost:4100/cards/1
+GET {{entryPoint}}/cards/9
 ###
-PATCH  http://localhost:4100/cards/7
+PATCH  {{entryPoint}}/cards/9
 Content-type: application/json
 
 {
     "title": "Fredo Card",
-    "order": 1
+    "order": 2,
+    "description": "Test patch 2"  
 }
 ###
-DELETE http://localhost:4100/cards/6
+DELETE {{entryPoint}}/cards/4
 
 ###
-GET http://localhost:4100/lists/1/cards
+GET {{entryPoint}}/lists/1/cards
 
 # ----------------------------- USER
 
 ###
-GET http://localhost:4100/kanban/
+GET {{entryPoint}}/kanban/
 
 ###
-GET http://localhost:4100/profile/
+GET {{entryPoint}}/profile/
 
 ###
-POST http://localhost:4100/signin/
+POST {{entryPoint}}/signin/
 
 ###
-POST http://localhost:4100/signup/
+POST {{entryPoint}}/signup/
 
 ###
-PATCH http://localhost:4100/profile/
+PATCH {{entryPoint}}/profile/
 
 ###
-DELETE http://localhost:4100/profile/
+DELETE {{entryPoint}}/profile/
 
 ###
-PUT http://localhost:4100/profile/
+PUT {{entryPoint}}/profile/

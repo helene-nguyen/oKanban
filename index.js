@@ -13,7 +13,7 @@ import * as error from './app/controllers/errorController.js';
 app.use(cors({ origin: 'http://localhost:4000'})); */
 
 app.use((req, res, next) => {   
-    res.header('Access-Control-Allow-Origin', 'http://localhost:4800');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:4000');
 
     next();
 });
