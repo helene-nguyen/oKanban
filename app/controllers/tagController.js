@@ -10,7 +10,7 @@ import {
 } from '../models/index.js';
 
 //~controller
-//&=================ALL TAGS
+//~ ------------------------------------------------ TAGS
 async function fetchAllTags(req, res) {
     try {
         const tags = await Tag.findAll({
@@ -27,7 +27,7 @@ async function fetchAllTags(req, res) {
     }
 };
 
-//&=================CREATE TAG
+//~ ------------------------------------------------ CREATE TAG
 async function createTag(req, res) {
     try {
         assert.ok(req.body.name, 'Le nom du tag doit être précisé');
@@ -43,7 +43,7 @@ async function createTag(req, res) {
     }
 };
 
-//&=================ONE TAG
+//~ ------------------------------------------------ ONE TAG
 async function fetchOneTag(req, res) {
     try {
         const tagId = Number(req.params.id);
@@ -59,7 +59,7 @@ async function fetchOneTag(req, res) {
     }
 };
 
-//&=================UPDATE TAG (PATCH)
+//~ ------------------------------------------------ UPDATE TAG (PATCH)
 async function updateTag(req, res) {
     try {
         assert.ok(req.body.name, 'Le nom du tag doit être précisé');
@@ -81,7 +81,7 @@ async function updateTag(req, res) {
         _500(err, req, res);
     }
 };
-//&=================DELETE TAG
+//~ ------------------------------------------------ DELETE TAG
 async function deleteTag(req, res) {
     try {
         await Tag.destroy({
@@ -97,7 +97,7 @@ async function deleteTag(req, res) {
     }
 };
 
-//&====================== UPSERT TAG BY CARD ID(PUT)
+// ~ ------------------------------------------------ UPSERT TAG BY CARD ID(PUT)
 // PUT http://[adresse]/cards/[:cardId]/tags/[:tagName]
 async function addAsWithTag(req, res) {
         try {
@@ -190,7 +190,7 @@ async function addAsWithTag(req, res) {
             }
         };
 
-        //&======================= DELETE TAGS BY CARD ID
+        //~ ------------------------------------------------ DELETE TAGS BY CARD ID
         // Cette fonction permet de supprimé l'association entre le tag et la carte lié
         // ( requête DELETE http://[adress]/cards/[:cardId]/tags/[:tagId] )
         async function deleteAsWithTag(req, res) {

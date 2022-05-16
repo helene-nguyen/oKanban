@@ -3,7 +3,6 @@
 #------------------------HOME 
 GET {{entryPoint}}
 
-
 # ----------------------------LIST
 ###
 GET {{entryPoint}}/lists
@@ -100,17 +99,18 @@ Content-type: application/json
     "list_id":1
 }
 ###
-GET {{entryPoint}}/cards/1
+GET {{entryPoint}}/cards/9
 ###
-PATCH  {{entryPoint}}/cards/7
+PATCH  {{entryPoint}}/cards/9
 Content-type: application/json
 
 {
     "title": "Fredo Card",
-    "order": 1
+    "order": 2,
+    "description": "Test patch 2"  
 }
 ###
-DELETE {{entryPoint}}/cards/6
+DELETE {{entryPoint}}/cards/4
 
 ###
 GET {{entryPoint}}/lists/1/cards
