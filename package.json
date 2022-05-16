@@ -1,0 +1,35 @@
+{
+  "type": "module",
+  "name": "okanban",
+  "version": "1.0.0",
+  "description": "Kanban app",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --inspect index.js",
+    "db:connect": "psql -U okanban -d okanban",
+    "db:create": "psql -U okanban -d okanban -f ./data/01-create_db.sql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen.git"
+  },
+  "author": "yumicode + megafredo + gtn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen/issues"
+  },
+  "homepage": "https://github.com/O-clock-Cassini/S06-oKanban-helene-nguyen#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cli-color": "^2.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "email-validator": "^2.0.4",
+    "express": "^4.18.1",
+    "express-session": "^1.17.2",
+    "pg": "^8.7.3",
+    "sequelize": "^6.19.0"
+  }
+}

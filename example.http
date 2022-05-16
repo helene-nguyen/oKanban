@@ -1,0 +1,137 @@
+#------------------------HOME 
+GET http://localhost:4100/
+
+
+# ----------------------------LIST
+###
+GET http://localhost:4100/lists
+
+###
+POST http://localhost:4100/lists
+#format json
+Content-type: application/json
+#Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
+
+{
+    "title": "Fredo",
+    "order": 15,
+    "user_id": 1
+}
+
+#format urlencoded
+# Content-type: application/x-www-form-urlencoded
+
+# title=sample
+# &order=3
+# &user_id=1
+
+###
+GET http://localhost:4100/lists/1
+
+###
+PATCH http://localhost:4100/lists/5
+#format json
+Content-type: application/json
+#Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
+
+{
+    "title": "UPDATE",
+    "order": 9,
+    "user_id": 1
+}
+
+###
+DELETE  http://localhost:4100/lists/5
+
+
+# ---------------------------- TAG
+###
+GET http://localhost:4100/tags
+
+###
+POST http://localhost:4100/tags
+Content-type: application/json
+
+{
+    "name": "Gtn Color"
+}
+
+###
+GET http://localhost:4100/tags/10
+
+###
+PATCH http://localhost:4100/tags/16
+Content-type: application/json
+
+{
+    "name": "Fredo Color"
+}
+
+###
+DELETE  http://localhost:4100/tags/15
+
+###
+PUT http://localhost:4100/cards/1/tags/autre
+
+###
+PUT http://localhost:4100/cards/1/tags/4
+
+###
+DELETE http://localhost:4100/cards/1/tags/10
+
+###
+ GET http://localhost:4100/cards/1/tags
+
+# ------------------------------ CARD
+
+###
+GET http://localhost:4100/cards
+###
+POST http://localhost:4100/cards
+Content-type: application/json
+
+{
+    "title": "Gtn Card",
+    "order": 4,
+    "description":"Lipalenonsix",
+    "user_id":1,
+    "list_id":1
+}
+###
+GET http://localhost:4100/cards/1
+###
+PATCH  http://localhost:4100/cards/7
+Content-type: application/json
+
+{
+    "title": "Fredo Card",
+    "order": 1
+}
+###
+DELETE http://localhost:4100/cards/6
+
+###
+GET http://localhost:4100/lists/1/cards
+
+# ----------------------------- USER
+
+###
+GET http://localhost:4100/kanban/
+
+###
+GET http://localhost:4100/profile/
+
+###
+POST http://localhost:4100/signin/
+
+###
+POST http://localhost:4100/signup/
+
+###
+PATCH http://localhost:4100/profile/
+
+###
+DELETE http://localhost:4100/profile/
+
+###
+PUT http://localhost:4100/profile/
