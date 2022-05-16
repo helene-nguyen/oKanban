@@ -1,5 +1,7 @@
 //~import modules
-import {_500 } from './errorController.js';
+import {
+    _500
+} from './errorController.js';
 import assert from 'assert';
 
 import {
@@ -32,10 +34,12 @@ async function fetchAllLists(req, res) {
 //&================= CREATE LIST
 async function createList(req, res) {
     try {
-        assert.ok(req.body.title, 'Le nom de la liste doit être précisé');
-        assert.ok(req.body.order, 'La position de la liste doit être précisée');
-        assert.ok(req.body.user_id, `L'utilisateur doit être identifié`);
+        //conditions
+        assert.ok(req.body.title && req.body.order, "Invalid body. Should provide at least a 'title' or 'order' property");
+        assert.ok(!isNaN(req.body.order), "Invalid body parameter 'order'. Should provide a number.");
+        assert.ok(req.body.user_id, `User must be provided`);
 
+        //create list
         await List.create({
             ...req.body
         });
@@ -54,9 +58,7 @@ async function fetchOneList(req, res) {
         const listId = Number(req.params.id);
         //On récupère la liste en DB via son id
         const list = await List.findByPk(listId, {
-            attributes: {
-                exclude: ['id', 'order', 'user_id', 'created_at', 'updated_at']
-            }
+            attributes: ['title', 'description']
         });
 
         assert.ok(list, `Aucune liste n'a été trouvée !`);
@@ -71,6 +73,11 @@ async function fetchOneList(req, res) {
 //&================= UPDATE LIST
 async function updateList(req, res) {
     try {
+        //conditions
+        assert.ok(req.body.title && req.body.order, "Invalid body. Should provide at least a 'title' or 'order' property");
+        assert.ok(!isNaN(req.body.order), "Invalid body parameter 'order'. Should provide a number.");
+        assert.ok(req.body.user_id, `User must be provided`);
+
         // ! Méthode 1 utilisation de UPDATE()
         await List.update(
             // l'ordre est important [values, conditions]
@@ -83,7 +90,7 @@ async function updateList(req, res) {
             }
         );
 
-        return res.json(`Les informations de la liste a bien été mise à jour`);
+        return res.json(`Les informations de la liste ont bien été mise à jour`);
 
     } catch (err) {
         _500(err, req, res);

@@ -8,7 +8,6 @@ import {
 //~controllers
 async function testDB(req, res) {
     try {
-        console.log('TEEEEST');
         const tags = await Tag.findAll();
         res.json(tags);
 

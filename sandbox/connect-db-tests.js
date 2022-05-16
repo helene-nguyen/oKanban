@@ -1,5 +1,3 @@
-console.log("Echo");
-
 const app = {
     //^init
     init() {
@@ -12,8 +10,8 @@ const app = {
         const response = await fetch("https://ghibliapi.herokuapp.com/films/58611129-2dbc-4a81-a72f-77ddfc1b1b49");
 
         // je teste si la réponse est OK
-        if (response.ok) {
-            console.log(await response.json());
+   /*      if (response.ok) {*/
+           
 
             // je vais récupérer mon parent UL
             /* const regionsHTML = document.getElementById("regions");
@@ -24,10 +22,10 @@ const app = {
                 let li = document.createElement('li');
                 li.textContent = region.nom;
                 regionsHTML.appendChild(li);
-            } */
-        } else {
+            } */ 
+        /* } else {
             console.log(response);
-        }
+        } */
     },
 
     async setRegionTitle() {

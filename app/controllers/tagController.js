@@ -49,9 +49,7 @@ async function fetchOneTag(req, res) {
         const tagId = Number(req.params.id);
 
         const tag = await Tag.findByPk(tagId, {
-            attributes: {
-                exclude: ['id', 'created_at', 'updated_at']
-            }
+            attributes: ['name', 'color']
         })
 
         res.json(tag);
@@ -64,6 +62,8 @@ async function fetchOneTag(req, res) {
 //&=================UPDATE TAG (PATCH)
 async function updateTag(req, res) {
     try {
+        assert.ok(req.body.name, 'Le nom du tag doit être précisé');
+
         await Tag.update(
             // l'ordre est important [values, conditions]
             {
@@ -97,7 +97,6 @@ async function deleteTag(req, res) {
     }
 };
 
-//REVIEW       
 //&====================== UPSERT TAG BY CARD ID(PUT)
 // PUT http://[adresse]/cards/[:cardId]/tags/[:tagName]
 async function addAsWithTag(req, res) {

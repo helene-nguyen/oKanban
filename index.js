@@ -10,20 +10,10 @@ import {
 import * as error from './app/controllers/errorController.js';
 
 /* import cors from 'cors';
-app.use(cors()); */
+app.use(cors({ origin: 'http://localhost:4000'})); */
 
-app.use((req, res, next) => {
-    //res.set() to set header, res.header is an alias
-    /* res.set(field [, value])
-res.set('Content-Type', 'text/plain')
-
-res.set({
-  'Content-Type': 'text/plain',
-  'Content-Length': '123',
-  ETag: '12345'
-})
-Aliased as res.header(field [, value]). */   
-    res.header('Access-Control-Allow-Origin', 'http://localhost:4000');
+app.use((req, res, next) => {   
+    res.header('Access-Control-Allow-Origin', 'http://localhost:4800');
 
     next();
 });
