@@ -4,8 +4,8 @@ const appList = {
     allList: '/lists',
     //^------------------------------ Init
     init() {
-        this.fetchAllLists();
         this.createForm();
+        this.fetchAllLists();
     },
     //^------------------------------ Methods
     //~fetch all lists
@@ -21,36 +21,41 @@ const appList = {
     },
     //~create form
     createForm() {
-        //
+        //*form element 
+        const dashboard = document.querySelector('#dashboard');
         const formElement = document.createElement('form');
         formElement.setAttribute('action', this.allList);
         formElement.setAttribute('method', 'POST');
         formElement.classList.add('form-list-box');
 
-        const dashboard = document.querySelector('#dashboard');
         dashboard.appendChild(formElement);
 
+        //*inputs
         const inputs = ['title', 'description'];
 
         for (let input of inputs) {
             const inputElement = document.createElement('input');
-
             inputElement.setAttribute('type', 'text');
             inputElement.setAttribute('name', `${input}`);
             inputElement.setAttribute('id', `${input}`);
             inputElement.setAttribute('placeholder', `${input.charAt(0).toUpperCase() + input.slice(1)}`);
 
             formElement.appendChild(inputElement);
-        }
+        };
 
+        //*button
         const btnAddList = document.createElement('input');
         btnAddList.setAttribute('type', 'submit');
         btnAddList.setAttribute('value', 'Add');
-        formElement.appendChild(btnAddList);
+        btnAddList.setAttribute('id', 'btn-submit');
 
+        formElement.appendChild(btnAddList);
     },
     //~create list
     createList() {
+        //list section
+        const sectionListsElement = document.createElement('section');
+        sectionListsElement.setAttribute('id', 'list-board');
 
     }
     //appendchild dans dashboard => queryselector dashboard

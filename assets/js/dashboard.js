@@ -7,7 +7,7 @@ const appDashboard = {
     },
     //^--------------------Methods
     renderDashboard() {
-        const dashboardElement = document.createElement('section');
+        const dashboardElement = document.createElement('main');
         dashboardElement.setAttribute('id','dashboard');
 
         appDashboard.body.appendChild(dashboardElement);

@@ -40,14 +40,14 @@
 
 }
 
-body{
+body {
     font-family: var(--font-comfortaa);
     font-weight: 600;
     background-color: var(--PrimaryColor02);
     margin: 0 auto;
 }
 
-h1{
+h1 {
     font-size: 4rem;
     text-align: center;
     margin: 2rem;

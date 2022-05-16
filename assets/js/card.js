@@ -1,5 +1,3 @@
-console.log('echo');
-
 const appCard = {
     //^------------------------------ Variables
     body: document.querySelector('body'),
@@ -8,7 +6,7 @@ const appCard = {
     init() {
         appCard.fetchAllCards();
     },
-
+    
     //^------------------------------ Methods
     //~fetch all cards
     async fetchAllCards() {
@@ -26,10 +24,11 @@ const appCard = {
     //~create card
     createCard(cardTitle) {
         
-        const sectionCards = document.createElement('section');
-        sectionCards.classList.add('cards');
+        const sectionCardsElement = document.createElement('section');
+        sectionCardsElement.classList.add('cards');
 
         const cardElement = document.createElement('article');
+        cardElement.classList.add('card');
 
         const cardTitleElement = document.createElement('h2');
         cardTitleElement.textContent = cardTitle;

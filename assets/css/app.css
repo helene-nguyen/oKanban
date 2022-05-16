@@ -8,8 +8,43 @@
     box-shadow: var(--box-shadow01);
 }
 
+/*~FORM*/
 .form-list-box {
     width: 100%;
     height: 2em;
-    border: 1px solid var(--primary-color05);
 }
+
+/*~LIST*/
+#list-board {
+    width: 90%;
+    padding: 1rem;
+    margin: 0.5em auto;
+    box-shadow: var(--box-shadow01);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.list {
+    width: 25%;
+    height: 20em;
+    border: 1px solid var(--primary-color04);
+    flex: 1 1 15em;
+    margin: 0.5em;
+}
+
+.list-title {
+    background-color: var(--primary-color04);
+}
+
+/*~CARD*/
+.card-main, .card-list {
+    margin: 0.5em auto;
+    width: 95%;
+}
+
+.card-body {
+    box-shadow: var(--box-shadow04);
+    padding: 1em;
+    margin: 1em auto;
+}
+
