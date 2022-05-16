@@ -23,7 +23,7 @@ res.set({
   ETag: '12345'
 })
 Aliased as res.header(field [, value]). */   
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', 'http://localhost:4000');
 
     next();
 });
