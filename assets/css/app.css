@@ -1,0 +1,15 @@
+/*Yumicode 2022*/
+
+#dashboard {
+    margin: 0 auto;
+    width: 90%;
+    height: 30rem;
+    border: 1px solid var(--primary-color04);
+    box-shadow: var(--box-shadow01);
+}
+
+.form-list-box {
+    width: 100%;
+    height: 2em;
+    border: 1px solid var(--primary-color05);
+}

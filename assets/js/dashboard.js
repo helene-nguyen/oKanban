@@ -11,6 +11,8 @@ const appDashboard = {
         dashboardElement.setAttribute('id','dashboard');
 
         appDashboard.body.appendChild(dashboardElement);
+
+        return dashboardElement;
     }
 };
 
