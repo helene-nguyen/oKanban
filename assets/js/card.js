@@ -37,6 +37,7 @@ const appCard = {
         appCard.body.appendChild(sectionCards);
         sectionCards.appendChild(cardElement);
         cardElement.appendChild(cardTitleElement);
+        
     }
 };
 
