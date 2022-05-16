@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "name": "project",
+  "version": "1.0.0",
+  "description": "FRONT OFFICE",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "yumicode",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1"
+  }
+}
