@@ -8,7 +8,6 @@ import {
     _500
 } from './errorController.js';
 import assert from 'assert';
-//todo create utils file
 import {
     isValidHexadecimalColor
 } from './utils/utils.js';
@@ -57,8 +56,7 @@ async function createCard(req, res) {
         assert.ok(title && order, `Le nom ou la position de la carte doit être précisé`);
         assert.ok(!isNaN(order), `La position doit être un nombre`);
         assert.ok(description, `La description de la carte doit être précisée`);
-        //todo Gtn modif
-        assert.ok(isValidHexadecimalColor(color ? color : color = '#FFF'), `Invalid type: position should be a valid hexadecimal code (string)`);
+        assert.ok(isValidHexadecimalColor(color ? color : color = '#FFF'), `Invalid type: color should be a valid hexadecimal code (string)`);
 
         // L'utilisation du spread opérateur nous permet de récupéré tout les champs nécessaires,
         // sans avoir besoin de crée d'étape intermédiaire lors de la création d'une carte,
@@ -68,10 +66,10 @@ async function createCard(req, res) {
         });
 
         // on affiche avec json notre message
-        res.json(`La carte à bien été créée`);
+        res.json(`La carte a bien été créée`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
@@ -85,25 +83,24 @@ async function fetchOneCard(req, res) {
 
     try {
         // Récupération de l'id ( Number permet une certaine sécurité )
-        const oneCardId = Number(req.params.id);
+        const cardId = Number(req.params.id);
 
-        //todo Gtn
-        assert.ok(!isNaN(oneCardId), `Please verify the provided id, it's not a number`);
+
+        assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
         // L'utilisation de la méthode findOne() récupère la première entrée 
         // qui remplit les options de requête, ici on a juste un where "id"
         // comme pour les autres méthodes on exclus tout les éléments non nécessaires
-        const oneCard = await Card.findOne({
+        const card = await Card.findOne({
             where: {
-                id: oneCardId
+                id: cardId
             },
             attributes: {
                 exclude: ['created_at', 'updated_at']
             }
         });
-
-        assert.ok(oneCard, `La carte n'existe pas !`);
+        assert.ok(card, `La carte n'existe pas !`);
         // on affiche avec json notre résultat
-        res.json(oneCard)
+        res.json(card)
 
     } catch (err) {
         _404(err, req, res);
@@ -125,7 +122,6 @@ async function updateCard(req, res) {
         } = req.body;
 
         const cardId = Number(req.params.id);
-
         assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
         const card = await Card.findOne({
@@ -160,7 +156,7 @@ async function updateCard(req, res) {
         res.json(`Les informations ont été mis à jour`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
@@ -173,7 +169,7 @@ async function deleteCard(req, res) {
 
     try {
         const cardId = Number(req.params.id);
-
+        //todo Gtn
         assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
         const card = await Card.findOne({
@@ -195,7 +191,7 @@ async function deleteCard(req, res) {
         res.json(`La carte à bien été supprimée !`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
@@ -211,7 +207,7 @@ async function fetchAllCardsByListId(req, res) {
         const listId = Number(req.params.id);
         // Vérification si c'est un nombre ou non
         assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
-
+        //todo Gtn 
         const fetchOneList = await List.findOne({
             where: {
                 id: listId
@@ -226,7 +222,7 @@ async function fetchAllCardsByListId(req, res) {
         res.json(allCards);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 

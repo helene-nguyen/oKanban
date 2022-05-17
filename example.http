@@ -44,7 +44,6 @@ Content-type: application/json
 ###
 DELETE  {{entryPoint}}/lists/5
 
-
 # ---------------------------- TAG
 ###
 GET {{entryPoint}}/tags
@@ -58,7 +57,7 @@ Content-type: application/json
 }
 
 ###
-GET {{entryPoint}}/tags/10
+GET {{entryPoint}}/tags/1
 
 ###
 PATCH {{entryPoint}}/tags/16
@@ -75,10 +74,10 @@ DELETE  {{entryPoint}}/tags/15
 PUT {{entryPoint}}/cards/1/tags/autre
 
 ###
-PUT {{entryPoint}}/cards/1/tags/4
+PUT {{entryPoint}}/cards/1/tags/13
 
 ###
-DELETE {{entryPoint}}/cards/1/tags/10
+DELETE {{entryPoint}}/cards/1/tags/13
 
 ###
  GET {{entryPoint}}/cards/1/tags
@@ -99,7 +98,7 @@ Content-type: application/json
     "list_id":1
 }
 ###
-GET {{entryPoint}}/cards/9
+GET {{entryPoint}}/cards/1
 ###
 PATCH  {{entryPoint}}/cards/9
 Content-type: application/json
@@ -114,6 +113,9 @@ DELETE {{entryPoint}}/cards/4
 
 ###
 GET {{entryPoint}}/lists/1/cards
+
+###
+GET {{entryPoint}}/cards/1/tags
 
 # ----------------------------- USER
 
