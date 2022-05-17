@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS "list" (
 CREATE TABLE IF NOT EXISTS "card" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" TEXT NOT NULL,
-    "description" TEXT NULL,
+    "description" TEXT NOT NULL,
     "color" TEXT NULL,
     "order" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,

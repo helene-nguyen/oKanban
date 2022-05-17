@@ -1,6 +1,6 @@
 //~import modules
 import {
-    _500
+    _500, _404
 } from './errorController.js';
 import assert from 'assert';
 
@@ -39,7 +39,7 @@ async function createTag(req, res) {
         res.json(`Le tag ${req.body.name} a bien été crée`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
@@ -47,43 +47,60 @@ async function createTag(req, res) {
 async function fetchOneTag(req, res) {
     try {
         const tagId = Number(req.params.id);
+        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
 
         const tag = await Tag.findByPk(tagId, {
             attributes: ['name', 'color']
-        })
+        });
+
+        assert.ok(tag, `Le tag n'existe pas !`);
 
         res.json(tag);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
 //~ ------------------------------------------------ UPDATE TAG (PATCH)
 async function updateTag(req, res) {
     try {
+        const tagId = Number(req.params.id);
+        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
+        
+        const tag = await Tag.findByPk(tagId, {
+            attributes: ['name', 'color']
+        });
+
+        //^condition
+        assert.ok(tag, `Le tag n'existe pas`)
         assert.ok(req.body.name, 'Le nom du tag doit être précisé');
 
         await Tag.update(
             // l'ordre est important [values, conditions]
-            {
-                ...req.body
-            }, {
-                where: {
-                    ...req.params
-                }
-            }
+            { ...req.body },
+            {where: { ...req.params }}
         );
 
         return res.json(`Les informations du label a bien été mis à jour`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 //~ ------------------------------------------------ DELETE TAG
 async function deleteTag(req, res) {
     try {
+        const tagId = Number(req.params.id);
+        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
+        
+        const tag = await Tag.findByPk(tagId, {
+            attributes: ['name', 'color']
+        });
+
+        //^condition
+        assert.ok(tag, `Le tag n'existe pas`)
+
         await Tag.destroy({
             where: {
                 ...req.params
@@ -93,7 +110,7 @@ async function deleteTag(req, res) {
         res.json(`Le tag a bien été supprimé !`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
@@ -161,32 +178,32 @@ async function addAsWithTag(req, res) {
             const cardId = Number(req.params.cardId);
             const tagId = Number(req.params.tagId);
 
-            assert.ok(!isNaN(cardId), 'Chemin non conforme');
-            assert.ok(!isNaN(tagId), 'Chemin non conforme');
+            assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+            assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
 
-            const fetchOneCard = await Card.findOne({
+            const card = await Card.findOne({
                 where: {
                     id: cardId
                 }
             });
-            const fetchOneTag = await Tag.findOne({
+            const tag = await Tag.findOne({
                 where: {
                     id: tagId
                 }
             });
 
             // On vérifie les existances de la carte et du tag
-            assert.ok(fetchOneCard, `La carte n'existe pas`);
-            assert.ok(fetchOneTag, `Le tag n'existe pas`);
-            assert.ok(!await fetchOneCard.hasTags(fetchOneTag), `L'association existe déjà`)
+            assert.ok(card, `La carte n'existe pas`);
+            assert.ok(tag, `Le tag n'existe pas`);
+            assert.ok(!await card.hasTags(tag), `L'association existe déjà`)
 
-                fetchOneCard.addTags(fetchOneTag);
+                card.addTags(tag);
 
                 res.json(`Le tag a bien été lié`);
 
             }
             catch (err) {
-                _500(err, req, res);
+                _404(err, req, res);
             }
         };
 
@@ -200,33 +217,33 @@ async function addAsWithTag(req, res) {
                 const tagId = Number(req.params.tagId);
 
                 // isNaN vérifie si une chaine donné est un nombre ou pas (return true ou false)
-                assert.ok(!isNaN(cardId), 'Chemin non conforme');
-                assert.ok(!isNaN(tagId), 'Chemin non conforme');
+                assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+                assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
 
                 // Pour pouvoir delete une associations ils nous faut récupérer 
                 // dans notre cas oneCard et oneTag
-                const fetchOneCard = await Card.findOne({
+                const card = await Card.findOne({
                     where: {
                         id: cardId
                     }
                 });
-                const fetchOneTag = await Tag.findOne({
+                const tag = await Tag.findOne({
                     where: {
                         id: tagId
                     }
                 });
 
                 // On vérifie les existances de la carte et du tag
-                assert.ok(fetchOneCard, `La carte n'existe pas`);
-                assert.ok(fetchOneTag, `Le tag n'existe pas`);
+                assert.ok(card, `La carte n'existe pas`);
+                assert.ok(tag, `Le tag n'existe pas`);
 
                 // Utilisation de la méthode remove de sequelize pour dissocié 
-                fetchOneCard.removeTags(fetchOneTag);
+                card.removeTags(tag);
 
-                res.json(` Le tag " ${fetchOneTag.name} " à bien été dissocié ! `)
+                res.json(` Le tag " ${tag.name} " a bien été dissocié ! `)
 
             } catch (err) {
-                _500(err, req, res)
+                _404(err, req, res)
             }
         };
 
@@ -241,24 +258,28 @@ async function addAsWithTag(req, res) {
                 // Récupération de l'id
                 const cardId = Number(req.params.id);
                 // Vérification si c'est un nombre ou non
-                assert.ok(!isNaN(cardId), 'Chemin non conforme');
+                assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
-                const fetchOneCard = await Card.findOne({
+                const card = await Card.findOne({
                     where: {
                         id: cardId
                     }
                 });
-                // Si fetchOneCard n'existe pas alors on force l'erreur
-                assert.ok(fetchOneCard, `La carte n'existe pas`);
+                // Si card n'existe pas alors on force l'erreur
+                assert.ok(card, `La carte n'existe pas`);
 
                 // on récupère tout les tags lié a la carte trouvé
-                const allTags = await fetchOneCard.getTags()
+                const allTags = await card.getTags({
+                    attributes: {
+                        exclude: ['created_at', 'updated_at']
+                    }
+                })
 
                 // On affiche avec json notre résultat
                 res.json(allTags);
 
             } catch (err) {
-                _500(err, req, res)
+                _404(err, req, res)
             }
 
         };

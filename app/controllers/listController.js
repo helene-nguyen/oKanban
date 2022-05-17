@@ -1,18 +1,16 @@
 //~import modules
 import {
-    _500
+    _500, _404
 } from './errorController.js';
 import assert from 'assert';
 
 import {
     List,
-    Card,
-    User,
-    Tag
+    Card
 } from '../models/index.js';
 
 //~controller
-//&================= ALL LISTS
+//~ ------------------------------------------------ ALL LISTS
 async function fetchAllLists(req, res) {
     try {
         const lists = await List.findAll({
@@ -31,13 +29,20 @@ async function fetchAllLists(req, res) {
     }
 };
 
-//&================= CREATE LIST
+//~ ------------------------------------------------ CREATE LIST
 async function createList(req, res) {
     try {
-        //conditions
-        assert.ok(req.body.title && req.body.order, "Invalid body. Should provide at least a 'title' or 'order' property");
-        assert.ok(!isNaN(req.body.order), "Invalid body parameter 'order'. Should provide a number.");
-        assert.ok(req.body.user_id, `User must be provided`);
+        //TODO GTN
+        let {
+            title,
+            order,
+            user_id
+        } = req.body;
+
+        //^conditions
+        assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
+        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`);
+        assert.ok(user_id, `User must be provided`);
 
         //create list
         await List.create({
@@ -47,16 +52,19 @@ async function createList(req, res) {
         res.json(`La liste ${req.body.title} a bien été crée`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
-//&================= ONE LIST
+//~ ------------------------------------------------ ONE LIST
 async function fetchOneList(req, res) {
     try {
 
         const listId = Number(req.params.id);
         //On récupère la liste en DB via son id
+
+        assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
+
         const list = await List.findByPk(listId, {
             attributes: ['title', 'description']
         });
@@ -66,19 +74,29 @@ async function fetchOneList(req, res) {
         res.json(list);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
-//&================= UPDATE LIST
+//~ ------------------------------------------------ UPDATE LIST
 async function updateList(req, res) {
     try {
-        //conditions
-        assert.ok(req.body.title && req.body.order, "Invalid body. Should provide at least a 'title' or 'order' property");
-        assert.ok(!isNaN(req.body.order), "Invalid body parameter 'order'. Should provide a number.");
-        assert.ok(req.body.user_id, `User must be provided`);
+        let {
+            title,
+            order,
+            user_id
+        } = req.body;
 
-        // ! Méthode 1 utilisation de UPDATE()
+        const listId = Number(req.params.id);
+
+        const list = await List.findOne({ where: { id: listId }});
+
+        //^conditions
+        assert.ok(list, `La liste n'existe pas`);
+        assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
+        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`);
+        assert.ok(user_id, `User must be provided`);
+
         await List.update(
             // l'ordre est important [values, conditions]
             {
@@ -93,22 +111,28 @@ async function updateList(req, res) {
         return res.json(`Les informations de la liste ont bien été mise à jour`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
-//&================= DELETE LIST
+//~ ------------------------------------------------ DELETE LIST
 async function deleteList(req, res) {
     try {
-        await List.destroy({
-            where: {
-                ...req.params
-            }
-        });
+        const listId = Number(req.params.id);
+        //TODO Gtn
+        assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
+
+        const list = await List.findOne({ where: { id: listId }});
+
+        //^conditions
+        //todo Gtn add
+        assert.ok(list, `La carte n'existe pas`);
+
+        await List.destroy({ where: {...req.params }});
 
         res.json(`La liste a bien été supprimée !`);
 
     } catch (err) {
-        _500(err, req, res);
+        _404(err, req, res);
     }
 };
 
