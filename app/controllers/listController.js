@@ -1,13 +1,14 @@
 //~import modules
 import {
-    _500, _404
+    _500,
+    _404
 } from './errorController.js';
 import assert from 'assert';
-
 import {
     List,
     Card
 } from '../models/index.js';
+import formidable from 'formidable';
 
 //~controller
 //~ ------------------------------------------------ ALL LISTS
@@ -18,7 +19,7 @@ async function fetchAllLists(req, res) {
                 exclude: ['created_at', 'updated_at']
             },
             order: [
-                ['order', 'ASC']
+                ['id', 'ASC']
             ]
         });
 
@@ -33,11 +34,26 @@ async function fetchAllLists(req, res) {
 async function createList(req, res) {
     try {
         //TODO GTN
+        const options = {
+            multiples: true
+        };
+        const form = formidable(options);
+
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                console.error(err);
+            }
+            return req.body = fields
+        });
+
         let {
             title,
+            description,
             order,
             user_id
         } = req.body;
+
+
 
         //^conditions
         assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
@@ -89,7 +105,11 @@ async function updateList(req, res) {
 
         const listId = Number(req.params.id);
 
-        const list = await List.findOne({ where: { id: listId }});
+        const list = await List.findOne({
+            where: {
+                id: listId
+            }
+        });
 
         //^conditions
         assert.ok(list, `La liste n'existe pas`);
@@ -121,13 +141,21 @@ async function deleteList(req, res) {
         //TODO Gtn
         assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
 
-        const list = await List.findOne({ where: { id: listId }});
+        const list = await List.findOne({
+            where: {
+                id: listId
+            }
+        });
 
         //^conditions
         //todo Gtn add
         assert.ok(list, `La carte n'existe pas`);
 
-        await List.destroy({ where: {...req.params }});
+        await List.destroy({
+            where: {
+                ...req.params
+            }
+        });
 
         res.json(`La liste a bien été supprimée !`);
 

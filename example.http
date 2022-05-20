@@ -91,25 +91,28 @@ POST {{entryPoint}}/cards
 Content-type: application/json
 
 {
-    "title": "Gtn Card",
-    "order": 4,
+    "title": "Test 20 create",
+    "order": 2,
     "description":"Lipalenonsix",
+    "color":"#000",
     "user_id":1,
-    "list_id":1
+    "list_id":2
 }
 ###
 GET {{entryPoint}}/cards/1
 ###
-PATCH  {{entryPoint}}/cards/9
+PATCH  {{entryPoint}}/cards/13
 Content-type: application/json
 
 {
-    "title": "Fredo Card",
-    "order": 2,
-    "description": "Test patch 2"  
+    "title": "Change test 1 / id 1",
+    "order": 1,
+    "description": "Test patch",
+    "color": "#70c2b4",
+    "list_id": 2
 }
 ###
-DELETE {{entryPoint}}/cards/4
+DELETE {{entryPoint}}/cards/15
 
 ###
 GET {{entryPoint}}/lists/1/cards
