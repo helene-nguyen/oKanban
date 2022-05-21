@@ -254,7 +254,6 @@ async function addAsWithTag(req, res) {
         async function fetchAllTagsByCardId(req, res) {
 
             try {
-
                 // Récupération de l'id
                 const cardId = Number(req.params.id);
                 // Vérification si c'est un nombre ou non
