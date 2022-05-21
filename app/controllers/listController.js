@@ -1,9 +1,9 @@
 //~import modules
 import {
-    _500, _404
+    _500,
+    _404
 } from './errorController.js';
 import assert from 'assert';
-
 import {
     List,
     Card
@@ -18,7 +18,7 @@ async function fetchAllLists(req, res) {
                 exclude: ['created_at', 'updated_at']
             },
             order: [
-                ['order', 'ASC']
+                ['id', 'ASC']
             ]
         });
 
@@ -32,9 +32,10 @@ async function fetchAllLists(req, res) {
 //~ ------------------------------------------------ CREATE LIST
 async function createList(req, res) {
     try {
-        //TODO GTN
+       console.log(req.body);
         let {
             title,
+            description,
             order,
             user_id
         } = req.body;
@@ -49,7 +50,7 @@ async function createList(req, res) {
             ...req.body
         });
 
-        res.json(`La liste ${req.body.title} a bien été crée`);
+        res.json(`La liste ${req.body.title} a bien été créée`);
 
     } catch (err) {
         _404(err, req, res);
@@ -89,7 +90,11 @@ async function updateList(req, res) {
 
         const listId = Number(req.params.id);
 
-        const list = await List.findOne({ where: { id: listId }});
+        const list = await List.findOne({
+            where: {
+                id: listId
+            }
+        });
 
         //^conditions
         assert.ok(list, `La liste n'existe pas`);
@@ -108,7 +113,7 @@ async function updateList(req, res) {
             }
         );
 
-        return res.json(`Les informations de la liste ont bien été mise à jour`);
+        return res.json(`Les informations de la liste ont bien été mises à jour`);
 
     } catch (err) {
         _404(err, req, res);
@@ -121,13 +126,21 @@ async function deleteList(req, res) {
         //TODO Gtn
         assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
 
-        const list = await List.findOne({ where: { id: listId }});
+        const list = await List.findOne({
+            where: {
+                id: listId
+            }
+        });
 
         //^conditions
         //todo Gtn add
         assert.ok(list, `La carte n'existe pas`);
 
-        await List.destroy({ where: {...req.params }});
+        await List.destroy({
+            where: {
+                ...req.params
+            }
+        });
 
         res.json(`La liste a bien été supprimée !`);
 

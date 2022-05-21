@@ -25,8 +25,10 @@ async function fetchAllCards(req, res) {
         // (cela permet un gain significatif en terme de vitesse et mémoire)
         const allCards = await Card.findAll({
             attributes: {
-                exclude: ['created_at', 'updated_at']
-            }
+                exclude: ['created_at', 'updated_at'],
+            },
+            order: ['id']
+            
         });
         // on affiche avec json notre résultat
         res.json(allCards);
@@ -56,7 +58,7 @@ async function createCard(req, res) {
         assert.ok(title && order, `Le nom ou la position de la carte doit être précisé`);
         assert.ok(!isNaN(order), `La position doit être un nombre`);
         assert.ok(description, `La description de la carte doit être précisée`);
-        assert.ok(isValidHexadecimalColor(color ? color : color = '#FFF'), `Invalid type: color should be a valid hexadecimal code (string)`);
+        assert.ok(isValidHexadecimalColor(color ? color : color = '#000'), `Invalid type: color should be a valid hexadecimal code (string)`);
 
         // L'utilisation du spread opérateur nous permet de récupéré tout les champs nécessaires,
         // sans avoir besoin de crée d'étape intermédiaire lors de la création d'une carte,
@@ -137,7 +139,7 @@ async function updateCard(req, res) {
         assert.ok(!isNaN(order), `La position doit être un nombre`);
         assert.ok(description, `La description de la carte doit être précisée`);
         //todo Gtn add 
-        assert.ok(isValidHexadecimalColor(color ? color : '#FFF'), `Invalid type: position should be a valid hexadecimal code (string)`);
+        assert.ok(isValidHexadecimalColor(color ? color : '#000'), `Invalid type: position should be a valid hexadecimal code (string)`);
         // L'utilisation de la méthode update() permet la mise à jours des
         // informations de la carte
         await Card.update(
@@ -153,7 +155,7 @@ async function updateCard(req, res) {
             }
         );
         // On affiche avec json notre message
-        res.json(`Les informations ont été mis à jour`);
+        res.json(`Les informations ont été mises à jour`);
 
     } catch (err) {
         _404(err, req, res);
@@ -188,7 +190,7 @@ async function deleteCard(req, res) {
             }
         });
         // On affiche avec json notre message
-        res.json(`La carte à bien été supprimée !`);
+        res.json(`La carte a bien été supprimée !`);
 
     } catch (err) {
         _404(err, req, res);
