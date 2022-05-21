@@ -190,7 +190,7 @@ async function deleteCard(req, res) {
             }
         });
         // On affiche avec json notre message
-        res.json(`La carte à bien été supprimée !`);
+        res.json(`La carte a bien été supprimée !`);
 
     } catch (err) {
         _404(err, req, res);

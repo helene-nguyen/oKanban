@@ -8,7 +8,6 @@ import {
     List,
     Card
 } from '../models/index.js';
-import formidable from 'formidable';
 
 //~controller
 //~ ------------------------------------------------ ALL LISTS
@@ -33,27 +32,13 @@ async function fetchAllLists(req, res) {
 //~ ------------------------------------------------ CREATE LIST
 async function createList(req, res) {
     try {
-        //TODO GTN
-        const options = {
-            multiples: true
-        };
-        const form = formidable(options);
-
-        form.parse(req, (err, fields, files) => {
-            if (err) {
-                console.error(err);
-            }
-            return req.body = fields
-        });
-
+       console.log(req.body);
         let {
             title,
             description,
             order,
             user_id
         } = req.body;
-
-
 
         //^conditions
         assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
@@ -65,7 +50,7 @@ async function createList(req, res) {
             ...req.body
         });
 
-        res.json(`La liste ${req.body.title} a bien été crée`);
+        res.json(`La liste ${req.body.title} a bien été créée`);
 
     } catch (err) {
         _404(err, req, res);
@@ -128,7 +113,7 @@ async function updateList(req, res) {
             }
         );
 
-        return res.json(`Les informations de la liste ont bien été mise à jour`);
+        return res.json(`Les informations de la liste ont bien été mises à jour`);
 
     } catch (err) {
         _404(err, req, res);
