@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "list" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT NULL,
-    "order" INTEGER NOT NULL,
+    "order" SERIAL UNIQUE,
     "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ

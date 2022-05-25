@@ -7,7 +7,7 @@ function _401(req, res) {
 function _403(req, res) {
     res.status(403).json('ACCESS DENIED');
 };
-function _404(err, req, res) {//todo Gtn 
+function _404(err, req, res) {
     res.status(404).json({ "Error 404": err ? err.message : 'Page Not Found'});
 };
 function _500(err, req, res) { res.status(500).json({"Server Error 500": err.message});

@@ -15,7 +15,6 @@ Content-type: application/json
 
 {
     "title": "Fredo",
-    "order": 15,
     "user_id": 1
 }
 
@@ -27,16 +26,16 @@ Content-type: application/json
 # &user_id=1
 
 ###
-GET {{entryPoint}}/lists/1
+GET {{entryPoint}}/lists/7
 
 ###
-PATCH {{entryPoint}}/lists/5
+PATCH {{entryPoint}}/lists/7
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "title": "UPDATE",
+    "description": "UPDATE",
     "order": 9,
     "user_id": 1
 }
@@ -118,7 +117,7 @@ DELETE {{entryPoint}}/cards/15
 GET {{entryPoint}}/lists/1/cards
 
 ###
-GET {{entryPoint}}/cards/1/tags
+GET {{entryPoint}}/cards/9/tags
 
 # ----------------------------- USER
 

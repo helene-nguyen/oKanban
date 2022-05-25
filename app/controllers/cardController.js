@@ -27,7 +27,7 @@ async function fetchAllCards(req, res) {
             attributes: {
                 exclude: ['created_at', 'updated_at'],
             },
-            order: ['id']
+            order: [['order', 'DESC']]
             
         });
         // on affiche avec json notre résultat
@@ -135,9 +135,6 @@ async function updateCard(req, res) {
         //^conditions
         //todo Gtn add
         assert.ok(card, `La carte n'existe pas`);
-        assert.ok(title && order, `Le nom ou la position de la carte doit être précisé`);
-        assert.ok(!isNaN(order), `La position doit être un nombre`);
-        assert.ok(description, `La description de la carte doit être précisée`);
         //todo Gtn add 
         assert.ok(isValidHexadecimalColor(color ? color : '#000'), `Invalid type: position should be a valid hexadecimal code (string)`);
         // L'utilisation de la méthode update() permet la mise à jours des

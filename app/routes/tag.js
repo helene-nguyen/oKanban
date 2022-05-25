@@ -23,8 +23,8 @@ router.get('/tags/:id', fetchOneTag);
 router.patch('/tags/:id',updateTag);
 router.delete('/tags/:id', deleteTag);
 
-router.put('/cards/:cardId/tags/:tagId', addAsWithTag);
-// router.put('/cards/:cardId/tags/:tagName', addAsWithTag);
+// router.put('/cards/:cardId/tags/:tagId', addAsWithTag);
+router.put('/cards/:cardId/tags/:tagName', addAsWithTag);
 
 router.delete('/cards/:cardId/tags/:tagId', deleteAsWithTag);
 

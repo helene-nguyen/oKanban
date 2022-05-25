@@ -18,7 +18,7 @@ async function fetchAllLists(req, res) {
                 exclude: ['created_at', 'updated_at']
             },
             order: [
-                ['id', 'ASC']
+                ['order', 'ASC']
             ]
         });
 
@@ -36,16 +36,15 @@ async function createList(req, res) {
         let {
             title,
             description,
-            order,
             user_id
         } = req.body;
 
         //^conditions
-        assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
-        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`);
+        assert.ok(title, `Invalid body. Should provide at least a 'title' or 'order' property`);
         assert.ok(user_id, `User must be provided`);
 
-        //create list
+//todo order ne passe pas
+        //create list if order === null ?
         await List.create({
             ...req.body
         });
@@ -82,8 +81,10 @@ async function fetchOneList(req, res) {
 //~ ------------------------------------------------ UPDATE LIST
 async function updateList(req, res) {
     try {
+        console.log(req.body);
         let {
             title,
+            description,
             order,
             user_id
         } = req.body;
@@ -98,9 +99,22 @@ async function updateList(req, res) {
 
         //^conditions
         assert.ok(list, `La liste n'existe pas`);
-        assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
-        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`);
+      /*   assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
+        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`); */
         assert.ok(user_id, `User must be provided`);
+
+        /* if (title !== '') {
+            list.title = title;
+        }
+        if (description) {
+            list.description = description;
+        }
+        if (user_id) {
+            list.user_id = user_id;
+        }
+        
+        //todo title ???
+        await list.save(); */
 
         await List.update(
             // l'ordre est important [values, conditions]
