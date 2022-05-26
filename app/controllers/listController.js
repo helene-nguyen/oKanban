@@ -99,22 +99,8 @@ async function updateList(req, res) {
 
         //^conditions
         assert.ok(list, `La liste n'existe pas`);
-      /*   assert.ok(title && order, `Invalid body. Should provide at least a 'title' or 'order' property`);
-        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`); */
+        assert.ok(!isNaN(order), `Invalid body parameter 'order'. Should provide a number`); 
         assert.ok(user_id, `User must be provided`);
-
-        /* if (title !== '') {
-            list.title = title;
-        }
-        if (description) {
-            list.description = description;
-        }
-        if (user_id) {
-            list.user_id = user_id;
-        }
-        
-        //todo title ???
-        await list.save(); */
 
         await List.update(
             // l'ordre est important [values, conditions]

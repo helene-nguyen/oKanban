@@ -29,14 +29,13 @@ Content-type: application/json
 GET {{entryPoint}}/lists/7
 
 ###
-PATCH {{entryPoint}}/lists/7
+PATCH {{entryPoint}}/lists/6
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "description": "UPDATE",
-    "order": 9,
+    "order": 6,
     "user_id": 1
 }
 
@@ -79,7 +78,7 @@ PUT {{entryPoint}}/cards/1/tags/13
 DELETE {{entryPoint}}/cards/1/tags/13
 
 ###
- GET {{entryPoint}}/cards/1/tags
+GET {{entryPoint}}/cards/1/tags
 
 # ------------------------------ CARD
 
