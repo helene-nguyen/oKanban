@@ -9,6 +9,8 @@ import {router} from './app/routes/index.js';
 import {_404} from './app/controllers/errorController.js';
 import multer from 'multer';
 const bodyParser = multer();
+import helmet from 'helmet';
+app.use(helmet());
 
 import cors from 'cors';
 app.use(cors());
