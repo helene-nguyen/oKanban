@@ -11,7 +11,6 @@ GET {{entryPoint}}/lists
 POST {{entryPoint}}/lists
 #format json
 Content-type: application/json
-#Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
 
 {
     "title": "Fredo",
@@ -29,13 +28,13 @@ Content-type: application/json
 GET {{entryPoint}}/lists/7
 
 ###
-PATCH {{entryPoint}}/lists/6
+PATCH {{entryPoint}}/lists/5
 #format json
 Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "order": 6,
+    "order": 5,
     "user_id": 1
 }
 

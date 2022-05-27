@@ -1,29 +1,26 @@
 //~import modules
-import { Router } from 'express';
+import { Router } from "express";
 const router = Router();
-//gérer arrivée du formulaire
-//permet de parser me form data
-import formidable from 'formidable';
+import formidable from "formidable";
 
 //~routers
-router.post('/', (req, res, next) => {
-    console.log("body:", req.body);
-    
-    const options = {
-        multiples: true
-    };
-    const form = formidable(options);
+router.post("/", (req, res, next) => {
+  console.log("body:", req.body);
 
-    form.parse(req, (err, fields, files) => {
-        if (err) {
-            console.error(err);
-        }
+  const options = {
+    multiples: true
+  };
+  const form = formidable(options);
 
-        console.log(fields);
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.error(err);
+    }
 
-        res.send(true);
-    });
+    console.log(fields);
 
+    res.send(true);
+  });
 });
 
 export { router };

@@ -3,24 +3,15 @@ import 'dotenv/config';
 //~import modules
 import express from 'express';
 const app = express();
+
 import session from 'express-session';
-import {
-    router
-} from './app/routes/index.js';
-import * as error from './app/controllers/errorController.js';
+import {router} from './app/routes/index.js';
+import {_404} from './app/controllers/errorController.js';
 import multer from 'multer';
 const bodyParser = multer();
 
 import cors from 'cors';
-app.use(cors('*'));
-/* app.use(cors({ origin: 'http://localhost:4000'}));*/
-
-/* app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE");
-    next();
-}); */
+app.use(cors());
 
 //~read the body
 //accept Content-type: application/json
@@ -38,7 +29,7 @@ app.use(bodyParser.none());
 app.use(router);
 
 //~error
-app.use(error._400);
+app.use(_404);
 
 //~launch app
 const PORT = process.env.PORT ?? 3000;

@@ -1,66 +1,65 @@
 //~import modules
-import {
-    Model,
-    DataTypes
-} from 'sequelize';
+import { Model, DataTypes } from "sequelize";
 //~connect DB
-import getConnexion from '../database.js';
+import getConnexion from "../database.js";
 const sequelize = getConnexion();
 
 class Card extends Model {}
 
-Card.init({
+Card.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        unique: true,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      unique: true,
+      allowNull: false
     },
 
     title: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false
     },
 
     order: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
 
     color: {
-        type: DataTypes.TEXT,
-        allowNull: true
+      type: DataTypes.TEXT,
+      allowNull: true
     },
 
     description: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false
     },
 
     user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     list_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
 
     created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
     },
 
     updated_at: {
-        type: DataTypes.DATE,
-        allowNull: true
+      type: DataTypes.DATE,
+      allowNull: true
     }
-    
-}, {
+  },
+  {
     sequelize,
-    tableName: 'card'
-});
+    tableName: "card"
+  }
+);
 
 export { Card };
