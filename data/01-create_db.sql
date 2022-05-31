@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "list" (
     "id" INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT NULL,
-    "order" SERIAL NOT NULL,
+    "order" SERIAL,
     "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "updated_at" TIMESTAMPTZ
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "card" (
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "color" TEXT NULL,
-    "order" SERIAL NOT NULL,
+    "order" SERIAL,
     "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "list_id" INTEGER NOT NULL REFERENCES "list"("id") ON DELETE CASCADE,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),

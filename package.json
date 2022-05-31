@@ -9,7 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --inspect index.js",
     "db:connect": "psql -U okanban -d okanban",
-    "db:create": "psql -U okanban -d okanban -f ./data/01-create_db.sql"
+    "db:create": "psql -U okanban -d okanban -f ./data/01-create_db.sql",
+    "db:data": "psql -U okanban -d okanban -f ./data/02-import_data.sql"
   },
   "repository": {
     "type": "git",

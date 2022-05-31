@@ -13,7 +13,7 @@ async function fetchAllCards(req, res) {
       attributes: {
         exclude: ["created_at", "updated_at"]
       },
-      order: [["order", "DESC"]]
+      order: [["order", "ASC"]]
     });
 
     res.json(allCards);
@@ -30,10 +30,9 @@ async function createCard(req, res) {
     // Syntax: assert.ok(condition, [message]) => (import assert from 'assert';)
     //NON NULL in our tables
     assert.ok(
-      title && order,
+      title,
       `Title or description should be provided`
     );
-    assert.ok(!isNaN(order), `Position must be a number`);
     assert.ok(description, `A description should be provided`);
     assert.ok(
       isValidHexadecimalColor(color ? color : (color = "#000")),
