@@ -17,7 +17,12 @@ function getConnexion() {
       port:process.env.DB_PORT,
       host: process.env.DB_HOST,
       dialect: process.env.DB_ENV,
-      ssl: process.env.DB_SSLMODE,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      },
       logging: false,
     }
   );
