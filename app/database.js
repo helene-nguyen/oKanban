@@ -13,10 +13,12 @@ function getConnexion() {
         createdAt: "created_at",
         updatedAt: "updated_at"
       },
-
+      
+      port:process.env.DB_PORT,
       host: process.env.DB_HOST,
       dialect: process.env.DB_ENV,
-      logging: false
+      ssl: process.env.DB_SSLMODE,
+      logging: false,
     }
   );
 }
