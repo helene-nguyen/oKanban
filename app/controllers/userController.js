@@ -92,6 +92,35 @@ async function createUser(req, res) {
 //~ ------------------------------------------------ UPDATE
 async function updateUser(req, res) {
   try {
+    const targetId = +req.params.id;
+    if (isNaN(targetId)) return res.json(`Target id is not a number`);
+    //~find user
+    const user = await User.findByPk(targetId);
+    if (!user) return res.json(`User doesn't exist !`);
+
+    //#____________get datas__________
+    let { firstname, lastname, email, password, passwordConfirm } = req.body;
+
+    //~email exist
+    if (email) {
+      email !== undefined ? email : email === user.email;
+      if (!emailValidator.validate(email)) return res.json(`${email} is not a valid email !`);
+    }
+
+    //~encrypt password if password exist
+    if (password) {
+      password ? password : password === user.password;
+      //todo
+      if (!schema.validate(password)) return res.json('Password must contains bla bla bla');
+      if (password !== passwordConfirm) return res.json('Not the same password !');
+      const salt = await bcrypt.genSalt(10);
+      password = await bcrypt.hash(password, salt);
+    }
+
+    //~update user
+    await User.update({ firstname, lastname, email, password }, { where: { id: targetId } });
+
+    res.status(200).json(`User updated !`);
   } catch (err) {
     _500(err, req, res);
   }

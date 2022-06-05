@@ -121,7 +121,7 @@ GET {{entryPoint}}/cards/9/tags
 
 
 ###
-GET {{entryPoint}}/users/profile/1
+GET {{entryPoint}}/users/profile/6
 
 ###
 POST {{entryPoint}}/users/signin
@@ -143,7 +143,13 @@ Content-type: application/json
 }
 
 ###
-PATCH {{entryPoint}}/users/profile/3
+PATCH {{entryPoint}}/users/profile/5
+Content-type: application/json
+
+{  
+    "lastname":"admin",
+    "email":"admin@admin.com"
+}
 
 ###
 DELETE {{entryPoint}}/users/profile/3
