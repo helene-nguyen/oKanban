@@ -14,10 +14,10 @@ function getConnexion() {
     host: process.env.DB_HOST,
     dialect: process.env.DB_ENV,
     dialectOptions: {
-      ssl: {
+    /*   ssl: {
         require: true,
         rejectUnauthorized: false
-      }
+      } */
     },
     logging: false
   });

@@ -119,23 +119,24 @@ GET {{entryPoint}}/cards/9/tags
 
 # ----------------------------- USER
 
-###
-GET {{entryPoint}}/kanban/
 
 ###
-GET {{entryPoint}}/profile/
+GET {{entryPoint}}/users/profile/1
 
 ###
-POST {{entryPoint}}/signin/
+POST {{entryPoint}}/users/profile
+Content-type: application/json
+
+{
+    "email": "a@a.com",
+    "password": "a"
+}
 
 ###
-POST {{entryPoint}}/signup/
+POST {{entryPoint}}/users/profile
 
 ###
-PATCH {{entryPoint}}/profile/
+PATCH {{entryPoint}}/users/profile/3
 
 ###
-DELETE {{entryPoint}}/profile/
-
-###
-PUT {{entryPoint}}/profile/
+DELETE {{entryPoint}}/users/profile/3
