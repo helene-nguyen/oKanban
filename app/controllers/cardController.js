@@ -1,3 +1,4 @@
+//Yumicode 2022
 // ~ IMPORTATIONS
 import { Card, List } from "../models/index.js";
 import { _404, _500 } from "./errorController.js";
