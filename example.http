@@ -152,4 +152,4 @@ Content-type: application/json
 }
 
 ###
-DELETE {{entryPoint}}/users/profile/3
+DELETE {{entryPoint}}/users/profile/6

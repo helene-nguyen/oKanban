@@ -129,6 +129,16 @@ async function updateUser(req, res) {
 //~ ------------------------------------------------ DELETE
 async function deleteUser(req, res) {
   try {
+    const targetId = +req.params.id;
+    if (isNaN(targetId)) throw new Error('Target id is not a number');
+
+    const user = await User.findByPk(targetId);
+
+    if (!user) return res.json(`User doesn't exist !`);
+
+      await User.destroy({where: {id:targetId}});
+
+    res.status(200).json(`User with email ${user.email} was deleted !`);
   } catch (err) {
     _500(err, req, res);
   }
