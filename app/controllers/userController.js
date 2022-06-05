@@ -54,7 +54,7 @@ async function signInUser(req, res) {
     //^condition
     if (!validatePassword) return res.json('Please retry, email or password do not match !');
 
-    return res.status(200).res.json(`Hello ${user.firstname}`);
+    return res.status(200).json(`Hello, you are connected !`);
   } catch (err) {
     _500(err, req, res);
   }
@@ -63,6 +63,27 @@ async function signInUser(req, res) {
 //~ ------------------------------------------------ CREATE
 async function createUser(req, res) {
   try {
+    //get datas
+    let { firstname, email, password, passwordConfirm } = req.body;
+    //-check if user exist
+    const user = await User.findOne({ where: { email } });
+    //-check entries
+    if (user) return res.json(`This ${email} already exist, please retry !`);
+    if (!emailValidator.validate(email)) return res.json(`${email} is not a valid email !`);
+    //todo
+    if (!schema.validate(password)) return res.json('Password must contains bla bla bla');
+    if (password !== passwordConfirm) return res.json('Not the same password !');
+    //if no firstname
+    firstname === undefined ? (firstname = '') : firstname;
+
+    //~encrypt password
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(password, salt);
+
+    //~create user
+    await User.create({ ...req.body, password });
+
+    return res.status(200).json(`Welcome ${firstname}, your are registered ! You can now create your Kanban !`);
   } catch (err) {
     _500(err, req, res);
   }

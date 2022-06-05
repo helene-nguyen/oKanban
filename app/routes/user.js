@@ -7,9 +7,9 @@ import { fetchOneUser, signInUser, createUser, updateUser, deleteUser } from '..
 //^===============USER
 //form
 router.get('/users/profile/:id', fetchOneUser); //fetch
-router.post('/users/profile', signInUser);//signin (logIn)
+router.post('/users/signin', signInUser);//signin (logIn)
 
-router.post('/users/profile', createUser);//create
+router.post('/users/signup', createUser);//create
 
 router.patch('/users/profile/:id', updateUser); //update
 router.delete('/users/profile/:id', deleteUser); //delete

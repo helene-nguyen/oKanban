@@ -124,16 +124,23 @@ GET {{entryPoint}}/cards/9/tags
 GET {{entryPoint}}/users/profile/1
 
 ###
-POST {{entryPoint}}/users/profile
+POST {{entryPoint}}/users/signin
 Content-type: application/json
 
 {
-    "email": "a@a.com",
-    "password": "a"
+    "email": "admin@admin.com",
+    "password": "admin"
 }
 
 ###
-POST {{entryPoint}}/users/profile
+POST {{entryPoint}}/users/signup
+Content-type: application/json
+
+{
+    "email": "d@d.com",
+    "password": "d",
+    "passwordConfirm": "d"
+}
 
 ###
 PATCH {{entryPoint}}/users/profile/3
