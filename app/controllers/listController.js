@@ -13,7 +13,7 @@ async function fetchAllLists(req, res) {
       },
       order: [["order", "ASC"]]
     });
-
+    
     res.json(lists);
   } catch (err) {
     _500(err, req, res);

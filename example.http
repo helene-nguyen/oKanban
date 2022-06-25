@@ -109,7 +109,7 @@ Content-type: application/json
     "list_id": 2
 }
 ###
-DELETE {{entryPoint}}/cards/15
+DELETE {{entryPoint}}/cards/9
 
 ###
 GET {{entryPoint}}/lists/1/cards
@@ -117,6 +117,8 @@ GET {{entryPoint}}/lists/1/cards
 ###
 GET {{entryPoint}}/cards/9/tags
 
+###
+DELETE {{entryPoint}}/lists/2/cards
 # ----------------------------- USER
 
 
@@ -153,3 +155,6 @@ Content-type: application/json
 
 ###
 DELETE {{entryPoint}}/users/profile/6
+
+###
+

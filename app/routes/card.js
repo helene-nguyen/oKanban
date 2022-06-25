@@ -2,7 +2,7 @@
 import { Router } from 'express';
 const router = Router();
 
-import { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard,fetchAllCardsByListId} from '../controllers/cardController.js';
+import { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard,fetchAllCardsByListId, deleteCardsByListId} from '../controllers/cardController.js';
 
 //^===============CARD
 router.get('/cards', fetchAllCards);
@@ -13,5 +13,7 @@ router.patch('/cards/:id', updateCard);
 router.delete('/cards/:id', deleteCard);
 
 router.get('/lists/:id/cards', fetchAllCardsByListId);
+
+router.delete('/lists/:id/cards', deleteCardsByListId);
 
 export {router};

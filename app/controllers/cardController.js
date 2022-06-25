@@ -1,9 +1,9 @@
 //Yumicode 2022
 // ~ IMPORTATIONS
-import { Card, List } from "../models/index.js";
-import { _404, _500 } from "./errorController.js";
-import assert from "assert";
-import { isValidHexadecimalColor } from "../middlewares/validHex.js";
+import { Card, List } from '../models/index.js';
+import { _404, _500 } from './errorController.js';
+import assert from 'assert';
+import { isValidHexadecimalColor } from '../middlewares/validHex.js';
 
 // ~ FUNCTIONS
 // ~ ------------------------------- FETCH ALL CARDS
@@ -12,9 +12,9 @@ async function fetchAllCards(req, res) {
   try {
     const allCards = await Card.findAll({
       attributes: {
-        exclude: ["created_at", "updated_at"]
+        exclude: ['created_at', 'updated_at']
       },
-      order: [["order", "ASC"]]
+      order: [['order', 'ASC']]
     });
 
     res.json(allCards);
@@ -30,15 +30,9 @@ async function createCard(req, res) {
     let { title, order, description, color } = req.body;
     // Syntax: assert.ok(condition, [message]) => (import assert from 'assert';)
     //NON NULL in our tables
-    assert.ok(
-      title,
-      `Title or description should be provided`
-    );
+    assert.ok(title, `Title or description should be provided`);
     assert.ok(description, `A description should be provided`);
-    assert.ok(
-      isValidHexadecimalColor(color ? color : (color = "#000")),
-      `Invalid type: color should be a valid hexadecimal code (string)`
-    );
+    assert.ok(isValidHexadecimalColor(color ? color : (color = '#000')), `Invalid type: color should be a valid hexadecimal code (string)`);
 
     // with create() with Sequelize, no need to save()
     await Card.create({
@@ -58,10 +52,7 @@ async function fetchOneCard(req, res) {
     // Récupération de l'id ( Number permet une certaine sécurité )
     const cardId = Number(req.params.id);
 
-    assert.ok(
-      !isNaN(cardId),
-      `Please verify the provided id, it's not a number`
-    );
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
     // L'utilisation de la méthode findOne() récupère la première entrée
     // qui remplit les options de requête, ici on a juste un where "id"
     // comme pour les autres méthodes on exclus tout les éléments non nécessaires
@@ -70,7 +61,7 @@ async function fetchOneCard(req, res) {
         id: cardId
       },
       attributes: {
-        exclude: ["created_at", "updated_at"]
+        exclude: ['created_at', 'updated_at']
       }
     });
     assert.ok(card, `This card doesn't exist !`);
@@ -88,10 +79,7 @@ async function updateCard(req, res) {
     let { title, order, description, color } = req.body;
 
     const cardId = Number(req.params.id);
-    assert.ok(
-      !isNaN(cardId),
-      `Please verify the provided id, it's not a number`
-    );
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
     const card = await Card.findOne({
       where: {
@@ -102,10 +90,7 @@ async function updateCard(req, res) {
     //^conditions
     assert.ok(card, `La carte n'existe pas`);
 
-    assert.ok(
-      isValidHexadecimalColor(color ? color : "#000"),
-      `Invalid type: position should be a valid hexadecimal code (string)`
-    );
+    assert.ok(isValidHexadecimalColor(color ? color : '#000'), `Invalid type: position should be a valid hexadecimal code (string)`);
 
     await Card.update(
       // order of info is important here [values, conditions]
@@ -131,10 +116,7 @@ async function deleteCard(req, res) {
   try {
     const cardId = Number(req.params.id);
 
-    assert.ok(
-      !isNaN(cardId),
-      `Please verify the provided id, it's not a number`
-    );
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
     const card = await Card.findOne({
       where: {
@@ -163,10 +145,7 @@ async function fetchAllCardsByListId(req, res) {
   try {
     const listId = Number(req.params.id);
 
-    assert.ok(
-      !isNaN(listId),
-      `Please verify the provided id, it's not a number`
-    );
+    assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
 
     const fetchOneList = await List.findOne({
       where: {
@@ -183,12 +162,33 @@ async function fetchAllCardsByListId(req, res) {
     _404(err, req, res);
   }
 }
+// ~ ------------------------------- DELETE ALL CARDS BY LIST ID
+// ( DELETE http://[adress]/lists/[:id]/cards )
+async function deleteCardsByListId(req, res) {
+  try {
+    const listId = Number(req.params.id);
 
-export {
-  fetchAllCards,
-  createCard,
-  fetchOneCard,
-  updateCard,
-  deleteCard,
-  fetchAllCardsByListId
-};
+    assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
+
+    const cards = await Card.findAll({
+      where: {
+        list_id: listId
+      }
+    });
+
+    //^conditions
+    assert.ok(cards, `These cards don't exist !`);
+
+    await Card.destroy({
+      where: {
+        list_id: listId
+      }
+    });
+
+    res.json(`Cards deleted !`);
+  } catch (err) {
+    _404(err, req, res);
+  }
+}
+
+export { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard, fetchAllCardsByListId, deleteCardsByListId };

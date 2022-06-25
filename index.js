@@ -4,7 +4,7 @@ import 'dotenv/config';
 import express from 'express';
 const app = express();
 
-import session from 'express-session';
+// import session from 'express-session';
 import {router} from './app/routes/index.js';
 import {_404} from './app/controllers/errorController.js';
 import multer from 'multer';

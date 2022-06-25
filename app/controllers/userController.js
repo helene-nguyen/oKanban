@@ -67,6 +67,7 @@ async function createUser(req, res) {
     let { firstname, email, password, passwordConfirm } = req.body;
     //-check if user exist
     const user = await User.findOne({ where: { email } });
+
     //-check entries
     if (user) return res.json(`This ${email} already exist, please retry !`);
     if (!emailValidator.validate(email)) return res.json(`${email} is not a valid email !`);
