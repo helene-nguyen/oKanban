@@ -1,7 +1,7 @@
 //Yumicode 2022
 // ~ IMPORTATIONS
 import { Card, List } from '../models/index.js';
-import { _404, _500 } from './errorController.js';
+import errorAPI from './errorController.js';
 import assert from 'assert';
 import { isValidHexadecimalColor } from '../middlewares/validHex.js';
 
@@ -19,7 +19,7 @@ async function fetchAllCards(req, res) {
 
     res.json(allCards);
   } catch (err) {
-    _500(err, req, res);
+    errorAPI(err, req, res,500);
   }
 }
 
@@ -41,7 +41,7 @@ async function createCard(req, res) {
 
     res.json(`Card created !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -68,7 +68,7 @@ async function fetchOneCard(req, res) {
     // on affiche avec json notre résultat
     res.json(card);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -106,7 +106,7 @@ async function updateCard(req, res) {
 
     res.json(`Everything is updated !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -135,7 +135,7 @@ async function deleteCard(req, res) {
 
     res.json(`Card deleted !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -159,7 +159,7 @@ async function fetchAllCardsByListId(req, res) {
 
     res.json(allCards);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 // ~ ------------------------------- DELETE ALL CARDS BY LIST ID
@@ -187,7 +187,7 @@ async function deleteCardsByListId(req, res) {
 
     res.json(`Cards deleted !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 

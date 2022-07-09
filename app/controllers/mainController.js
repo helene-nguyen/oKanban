@@ -1,5 +1,5 @@
 //~import modules
-import * as error from './errorController.js';
+import errorAPI from './errorController.js';
 
 //~controllers
 async function renderHomePage(req, res) {
@@ -8,7 +8,7 @@ async function renderHomePage(req, res) {
         res.json('Welcome to Okanban API');
 
     } catch (err) {
-        error._500(err, req, res);
+        errorAPI(err, req, res,500);
     }
 };
 

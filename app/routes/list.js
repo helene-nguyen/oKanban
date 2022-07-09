@@ -2,10 +2,13 @@
 import { Router } from 'express';
 const router = Router();
 
-import { createList, deleteList, fetchAllLists, fetchOneList, updateList } from '../controllers/listController.js'
+import { createList, deleteList, fetchAllLists, fetchOneList, updateList } from '../controllers/listController.js';
+
+
+import { auth, admin } from '../middlewares/auth.js';
 
 //^===============LIST
-router.get('/lists', fetchAllLists);
+router.get('/lists', auth, fetchAllLists);
 router.post('/lists', createList);
 
 router.get('/lists/:id', fetchOneList);

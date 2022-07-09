@@ -1,5 +1,5 @@
 //~import modules
-import { _500, _404 } from "./errorController.js";
+import errorAPI from "./errorController.js";
 import assert from "assert";
 import { Tag, Card } from "../models/index.js";
 
@@ -16,7 +16,7 @@ async function fetchAllTags(req, res) {
 
     res.json(tags);
   } catch (err) {
-    _500(err, req, res);
+    errorAPI(err, req, res,500);
   }
 }
 
@@ -31,7 +31,7 @@ async function createTag(req, res) {
 
     res.json(`Tag [ ${req.body.name} ] is created !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -52,7 +52,7 @@ async function fetchOneTag(req, res) {
 
     res.json(tag);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -87,7 +87,7 @@ async function updateTag(req, res) {
 
     return res.json(`Everything is up-to-date !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 //~ ------------------------------- DELETE TAG
@@ -114,7 +114,7 @@ async function deleteTag(req, res) {
 
     res.json(`Tag deleted !`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -172,7 +172,7 @@ async function findOrCreateTagByCardId(req, res) {
 
     res.json(`Tag is linked to card`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -210,7 +210,7 @@ async function addTagToCard(req, res) {
 
     res.json(`Tag is linked to card`);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -250,7 +250,7 @@ async function deleteAsWithTag(req, res) {
 
     res.json(` The tag " ${tag.name} " is well unlinked ! `);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 
@@ -281,7 +281,7 @@ async function fetchAllTagsByCardId(req, res) {
 
     res.json(allTags);
   } catch (err) {
-    _404(err, req, res);
+     errorAPI(err, req, res,500);
   }
 }
 

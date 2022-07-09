@@ -1,11 +1,11 @@
-@entryPoint = http://localhost:4100
+@entryPoint = http://localhost:4110
 
 #------------------------HOME 
 GET {{entryPoint}}
 
 # ----------------------------LIST
 ###
-GET {{entryPoint}}/lists
+GET {{entryPoint}}/lists/
 
 ###
 POST {{entryPoint}}/lists
@@ -123,7 +123,7 @@ DELETE {{entryPoint}}/lists/2/cards
 
 
 ###
-GET {{entryPoint}}/users/profile/6
+GET {{entryPoint}}/users/profile/5
 
 ###
 POST {{entryPoint}}/users/signin
@@ -139,22 +139,24 @@ POST {{entryPoint}}/users/signup
 Content-type: application/json
 
 {
-    "email": "d@d.com",
-    "password": "d",
-    "passwordConfirm": "d"
+    "email": "test@test.com",
+    "password": "test",
+    "passwordConfirm": "test"
 }
 
 ###
-PATCH {{entryPoint}}/users/profile/5
+PATCH {{entryPoint}}/users/profile/4
 Content-type: application/json
 
 {  
     "lastname":"admin",
-    "email":"admin@admin.com"
+    "email":"admin@admin.com",
+    "password": "admin",
+    "passwordConfirm": "admin"
 }
 
 ###
 DELETE {{entryPoint}}/users/profile/6
 
 ###
-
+GET {{entryPoint}}/users/signout
