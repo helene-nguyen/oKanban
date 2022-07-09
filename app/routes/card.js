@@ -2,10 +2,12 @@
 import { Router } from 'express';
 const router = Router();
 
-import { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard,fetchAllCardsByListId, deleteCardsByListId} from '../controllers/cardController.js';
+import { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard, fetchAllCardsByListId, deleteCardsByListId } from '../controllers/cardController.js';
+
+import {auth} from '../../app/middlewares/auth.js';
 
 //^===============CARD
-router.get('/cards', fetchAllCards);
+router.get('/cards', auth,fetchAllCards);
 router.post('/cards', createCard);
 
 router.get('/cards/:id', fetchOneCard);
