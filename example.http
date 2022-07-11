@@ -130,8 +130,8 @@ POST {{entryPoint}}/users/signin
 Content-type: application/json
 
 {
-    "email": "admin@admin.com",
-    "password": "admin"
+    "email": "test@test.com",
+    "password": "test"
 }
 
 ###
@@ -160,3 +160,18 @@ DELETE {{entryPoint}}/users/profile/6
 
 ###
 GET {{entryPoint}}/users/signout
+Content-type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3NDg2MDUxLCJleHAiOjE2NTc0ODcyNTF9.jnyzT3tP0vHaET1YEC5BaKfNczdZQ3LO7UCmOer_Zyo"
+}
+
+
+###
+POST {{entryPoint}}/refreshToken
+Content-type: application/json
+
+{
+    "email": "admin@admin.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3NDg2MDUxLCJleHAiOjE2NTc0ODcyNTF9.jnyzT3tP0vHaET1YEC5BaKfNczdZQ3LO7UCmOer_Zyo"
+}

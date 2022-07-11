@@ -62,7 +62,6 @@ async function fetchOneList(req, res) {
 //~ ------------------------------------------------ UPDATE LIST
 async function updateList(req, res) {
   try {
-
     let { title, description, order, user_id } = req.body;
 
     const listId = Number(req.params.id);

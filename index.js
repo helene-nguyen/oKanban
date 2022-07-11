@@ -10,6 +10,14 @@ import errorAPI from './app/controllers/errorController.js';
 import helmet from 'helmet';
 app.use(helmet());
 
+//~body parser for forms
+//none for waiting no files but only classical forms
+//~ Import Multer for formdata
+import multer from 'multer';
+const bodyParser = multer();
+app.use(bodyParser.none());
+
+
 //~ Cors
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,8 +34,6 @@ import session from 'express-session';
 
 import {userMiddleware} from './app/middlewares/auth.js'
 
-
-
 //~read the body
 //accept Content-type: application/json
 app.use(express.json());
@@ -43,23 +49,23 @@ app.use(session(
         secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
-        cookie: { maxAge: 24 * 60 * 60 * 1000 }
-        //24 hours
+        cookie: {
+            secure: false,
+            sameSite: 'lax',
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000//24 hours
+        }
+        
     }
 ));
+
 
 //&great mw to keep the user connected !
 app.use(userMiddleware);
 
-//~body parser for forms
-//none for waiting no files but only classical forms
-//~ Import Multer for formdata
-import multer from 'multer';
-const bodyParser = multer();
-app.use(bodyParser.none());
-
 //~router
 app.use(router);
+
 
 //~error
 app.use((req, res)=>{

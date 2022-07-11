@@ -1,4 +1,5 @@
 //~import modules
+import 'dotenv/config';
 import errorAPI from './errorController.js';
 import { User } from '../models/user.js';
 //security
@@ -15,8 +16,11 @@ schema.is().min(6); // Minimum length 6 // Blacklist these values
 .has().symbols(1) // Must have at least 1 symbol
 .has().not().spaces() // Should not have spaces
 .is().not().oneOf(['Passw0rd', 'Password123']) */
+//& Import JWT
+import jwt from 'jsonwebtoken';
+
 //~controller
-//~ ------------------------------------------------ PROFIL PAGE
+//~ PROFIL PAGE
 async function fetchOneUser(req, res) {
   try {
     const targetId = +req.params.id;
@@ -27,11 +31,11 @@ async function fetchOneUser(req, res) {
 
     res.status(200).json(user);
   } catch (err) {
-    errorAPI(err, req, res,500);
+    errorAPI(err, req, res, 500);
   }
 }
 
-//~ ------------------------------------------------ SIGN IN
+//~  SIGN IN
 async function signInUser(req, res) {
   try {
     //get datas
@@ -54,19 +58,73 @@ async function signInUser(req, res) {
     //^condition
     if (!validatePassword) return errorAPI({ message: 'Please retry, email or password do not match !' }, req, res, 401);
 
-    //&------------------- SESSION
-    req.session.user = user;
-    //delete datavalues password to protect data
-    delete user.dataValues.password;
-    //&------------------- SESSION
+    //&  SESSION
+    //*jwt
+    const accessToken = generateAccessToken({ email });
+    const refreshToken = generateRefreshToken({ email });
 
-    return res.status(200).json(user);
+    //*session
+    // req.session.user = user;
+    // //delete datavalues password to protect data
+    // delete user.dataValues.password;
+
+    // console.log('connected', req.session.user);
+
+    // console.log('SESSION ID : ', req.sessionID);
+    // console.log('ID : ', req.session.id);
+    // console.log('COOKIE : ', req.session.cookie);
+    // console.log(req)
+    //&  SESSION
+
+    return res.status(200).json({ accessToken, refreshToken });
   } catch (err) {
-    errorAPI(err, req, res,500);
+    errorAPI(err, req, res, 500);
   }
 }
 
-//~ ------------------------------------------------ CREATE
+//~  JWT ACCESS_TOKEN
+function generateAccessToken(email) {
+  return jwt.sign(email, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 1d => one day, 60m => 60 minutes
+}
+
+//~  JWT REFRESH_TOKEN
+//*register refresh tokens
+let refreshTokens = [];
+
+function generateRefreshToken(email) {
+  const refreshToken = jwt.sign(email, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '20m' }); // 1d => one day, 60m => 60 minutes
+
+  refreshTokens.push(refreshToken);
+  return refreshToken;
+}
+
+function refreshToken(req, res) {
+  if (!refreshTokens.includes(req.body.token)) res.status(400).json('Refresh Token Invalid');
+
+  refreshTokens = refreshTokens.filter(token => token != req.body.token);
+
+  //supprime l'ancien refreshToken de la liste refreshTokens
+  const accessToken = generateAccessToken({ user: req.body.email });
+
+  const refreshToken = generateRefreshToken({ user: req.body.email });
+
+  //générer un nouveau accessToken et refreshTokens
+  res.json({ accessToken, refreshToken });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//~  CREATE
 async function createUser(req, res) {
   try {
     //get datas
@@ -77,7 +135,7 @@ async function createUser(req, res) {
     //-check entries
     if (user) return errorAPI({ message: `This ${email} already exist, please retry !` }, req, res, 401);
     if (!emailValidator.validate(email)) return errorAPI({ message: `${email} is not a valid email !` }, req, res, 401);
-    if (!schema.validate(password)) return errorAPI({ message: 'Password must contains 6 char.' }, req, res, 401);
+    if (!schema.validate(password)) return errorAPI({ message: 'Password must contains min 6 char.' }, req, res, 401);
     if (password !== passwordConfirm) return errorAPI({ message: 'Not the same password !' }, req, res, 401);
     //if no firstname
     firstname === undefined ? (firstname = '') : firstname;
@@ -89,13 +147,13 @@ async function createUser(req, res) {
     //~create user
     await User.create({ ...req.body, password });
 
-    return res.status(201).json(`Welcome ${firstname}, your are registered ! You can now create your Kanban !`);
+    return res.status(201).json(`Welcome ${firstname}, your are registered ! Please login create your Kanban !`);
   } catch (err) {
     errorAPI(err, req, res, 500);
   }
 }
 
-//~ ------------------------------------------------ UPDATE
+//~  UPDATE
 async function updateUser(req, res) {
   try {
     const targetId = +req.params.id;
@@ -104,7 +162,7 @@ async function updateUser(req, res) {
     const user = await User.findByPk(targetId);
     if (!user) return errorAPI({ message: `User doesn't exist !` }, req, res, 400);
 
-    //&____________get datas__________
+    //&____________GET DATAS__________
     let { firstname, lastname, email, password, passwordConfirm } = req.body;
 
     //~email exist
@@ -127,11 +185,11 @@ async function updateUser(req, res) {
 
     res.status(200).json(`User updated !`);
   } catch (err) {
-    errorAPI(err, req, res,500);
+    errorAPI(err, req, res, 500);
   }
 }
 
-//~ ------------------------------------------------ DELETE
+//~  DELETE
 async function deleteUser(req, res) {
   try {
     const targetId = +req.params.id;
@@ -145,20 +203,29 @@ async function deleteUser(req, res) {
 
     res.status(200).json(`User with email ${user.email} was deleted !`);
   } catch (err) {
-    errorAPI(err, req, res,500);
+    errorAPI(err, req, res, 500);
   }
 }
 
-//~------------------------------------------- SIGN OUT USER
+//~  SIGN OUT USER
 async function signOutUser(req, res) {
   try {
-    req.session.user
-      ? res.status(200).json(`User with e-mail  [ ${req.session.user.email} ] is deconnected !`)
-      : errorAPI({ message: `No user authenticated !` }, req, res, 400);
-    req.session.destroy();
+    //& ------------------- JWT LOG OUT
+    refreshTokens = refreshTokens.filter(token => token != req.body.token);
+    //create a new array updated
+    res.status(204).json('Disconnected !');
+
+    //& ------------------- SESSION LOG OUT
+
+    // console.log('signout : ', req.session.id); // undefined ??
+    // req.session.user
+    // ? res.status(200).json(`User with e-mail  [ ${req.session.user.email} ] is deconnected !`)
+    // : errorAPI({ message: `No user authenticated !` }, req, res, 400);
+    // req.session.destroy();
+    //& ------------------- SESSION LOG OUT
   } catch (err) {
-    errorAPI(err, req, res,500);
+    errorAPI(err, req, res, 500);
   }
 }
 
-export { fetchOneUser, signInUser, createUser, updateUser, deleteUser, signOutUser };
+export { fetchOneUser, signInUser, createUser, updateUser, deleteUser, signOutUser, refreshToken };

@@ -4,6 +4,7 @@ import errorAPI from '../controllers/errorController.js';
 //~authentification
 async function auth(req, res, next) {
   try {
+    // console.log('HERE USER AUTH', req.session.user);
     if (!req.session.user) return errorAPI({ message: 'You need to be connected to create a super Kanban !' }, req, res, 401);
 
     next();

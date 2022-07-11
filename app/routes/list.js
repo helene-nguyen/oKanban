@@ -8,7 +8,7 @@ import { createList, deleteList, fetchAllLists, fetchOneList, updateList } from 
 import { auth, admin } from '../middlewares/auth.js';
 
 //^===============LIST
-router.get('/lists', auth, fetchAllLists);
+router.get('/lists', fetchAllLists);
 router.post('/lists', createList);
 
 router.get('/lists/:id', fetchOneList);
