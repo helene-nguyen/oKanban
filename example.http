@@ -6,6 +6,9 @@ GET {{entryPoint}}
 # ----------------------------LIST
 ###
 GET {{entryPoint}}/lists/
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY1Nzk2NTQxOCwiZXhwIjoxNjU3OTY2MzE4fQ.FFghmBpOXVhOdoxxwxd8pSWlW6ygXZxu4AwLU8FVcj4
+
 
 ###
 POST {{entryPoint}}/lists
@@ -161,17 +164,14 @@ DELETE {{entryPoint}}/users/profile/6
 ###
 GET {{entryPoint}}/users/signout
 Content-type: application/json
-
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3NDg2MDUxLCJleHAiOjE2NTc0ODcyNTF9.jnyzT3tP0vHaET1YEC5BaKfNczdZQ3LO7UCmOer_Zyo"
-}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3OTYyNDM3LCJleHAiOjE2NTc5NjM2Mzd9.LoSxI7duENoY4A_pEPL7vTHZce1NgAG6hDmW6l25XLs
 
 
 ###
 POST {{entryPoint}}/refreshToken
 Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY1Nzk2MjkzMSwiZXhwIjoxNjU3OTY0MTMxfQ.2-uc_Xj6sgkyRTv4lOLp_VkHy-vEU27lWU7-DYdk-fM
 
 {
-    "email": "admin@admin.com",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3NDg2MDUxLCJleHAiOjE2NTc0ODcyNTF9.jnyzT3tP0vHaET1YEC5BaKfNczdZQ3LO7UCmOer_Zyo"
+    "email": "admin@admin.com"
 }

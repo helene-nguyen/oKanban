@@ -20,3 +20,6 @@ export default function errorAPI(err, req, res, code) {
 // }
 
 // export { _500, _401, _403, _404};
+
+//Source https://sematext.com/blog/node-js-error-handling/
+

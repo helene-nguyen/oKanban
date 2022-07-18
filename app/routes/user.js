@@ -2,7 +2,9 @@
 import { Router } from 'express';
 const router = Router();
 
-import { fetchOneUser, signInUser, createUser, updateUser, deleteUser, signOutUser, refreshToken } from '../controllers/userController.js';
+import { fetchOneUser, signInUser, createUser, updateUser, deleteUser, signOutUser } from '../controllers/userController.js';
+
+import { refreshToken } from '../services/jwt.js';
 
 import { auth, admin } from '../middlewares/auth.js';
 

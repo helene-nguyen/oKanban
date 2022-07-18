@@ -21,7 +21,7 @@ app.use(bodyParser.none());
 //~ Cors
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE');
 
     // res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers');
@@ -42,23 +42,22 @@ app.use(express.urlencoded({
     extended: false
 }));
 
+//If you have your node.js behind a proxy and are using secure: true, you need to set 'trust proxy' in express
+app.set('trust proxy', 1) // trust first proxy if deploy Heroku
 
-//~session
-app.use(session(
-    {
-        secret: process.env.SESSION_SECRET,
-        resave: true,
-        saveUninitialized: true,
-        cookie: {
-            secure: false,
-            sameSite: 'lax',
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000//24 hours
+//~ Session
+app.use(session({
+    saveUninitialized: true,
+    resave: true,
+    proxy: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: { 
+        secure : true,
+        sameSite: 'lax', // or 'strict'
+        maxAge: 24 * 60 * 60 * 1000 //24 hours
+        //expires : new Date(Date.now() + 60 * 60 * 1000) //1 hour
         }
-        
-    }
-));
-
+}));
 
 //&great mw to keep the user connected !
 app.use(userMiddleware);

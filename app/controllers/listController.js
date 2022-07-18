@@ -14,7 +14,7 @@ async function fetchAllLists(req, res) {
       order: [['order', 'ASC']]
     });
 
-    res.json(lists);
+    return res.json(lists);
   } catch (err) {
     errorAPI(err, req, res,500);
   }
@@ -34,7 +34,7 @@ async function createList(req, res) {
       ...req.body
     });
 
-    res.json(`The list [ ${req.body.title} ] is created !`);
+    return res.json(`The list [ ${req.body.title} ] is created !`);
   } catch (err) {
      errorAPI(err, req, res,500);
   }
@@ -53,7 +53,7 @@ async function fetchOneList(req, res) {
 
     assert.ok(list, `This list doesn't exist !`);
 
-    res.json(list);
+    return res.json(list);
   } catch (err) {
      errorAPI(err, req, res,500);
   }
@@ -64,7 +64,7 @@ async function updateList(req, res) {
   try {
     let { title, description, order, user_id } = req.body;
 
-    const listId = Number(req.params.id);
+    const listId = +req.params.id;
 
     const list = await List.findOne({
       where: {
@@ -91,7 +91,7 @@ async function updateList(req, res) {
 
     return res.json(`Everything is up-to-date !`);
   } catch (err) {
-     errorAPI(err, req, res,500);
+     errorAPI(err, req, res, 500);
   }
 }
 //~ ------------------------------------------------ DELETE LIST
@@ -108,7 +108,7 @@ async function deleteList(req, res) {
 
     await List.destroy({ where: { ...req.params } });
 
-    res.json(`List deleted !`);
+    return res.json(`List deleted !`);
   } catch (err) {
      errorAPI(err, req, res,500);
   }

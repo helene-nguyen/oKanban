@@ -15,7 +15,7 @@ import {
 import { auth } from '../../app/middlewares/auth.js';
 
 //^===============CARD
-router.get('/cards', auth, fetchAllCards);
+router.get('/cards', fetchAllCards);
 router.post('/cards', createCard);
 
 router.get('/cards/:id', fetchOneCard);

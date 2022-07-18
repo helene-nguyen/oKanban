@@ -6,9 +6,11 @@ import { createList, deleteList, fetchAllLists, fetchOneList, updateList } from 
 
 
 import { auth, admin } from '../middlewares/auth.js';
+import {validateToken} from '../middlewares/validateToken.js'
+
 
 //^===============LIST
-router.get('/lists', fetchAllLists);
+router.get('/lists', validateToken, fetchAllLists);
 router.post('/lists', createList);
 
 router.get('/lists/:id', fetchOneList);
