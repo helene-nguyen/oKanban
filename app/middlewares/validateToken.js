@@ -18,8 +18,9 @@ function validateToken(req, res, next) {
         throw new ErrorApi('Token is invalid !', req, res, 403);
       }
       req.email = user;
+      console.log(" req.session.email IN VALIDATE TOKEN : ",  req.email);
       req.session.token = accessToken;
-      // console.log('TOKEN REQ SESSION IN VALIDATE : ', req.session.token);
+      console.log('TOKEN REQ SESSION IN VALIDATE : ', req.session.token);
       // console.log('JETON VALIDE');
       next();
     });

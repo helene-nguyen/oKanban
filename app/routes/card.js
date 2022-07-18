@@ -12,10 +12,11 @@ import {
   deleteCardsByListId
 } from '../controllers/cardController.js';
 
-import { auth } from '../../app/middlewares/auth.js';
+import { auth, admin } from '../../app/middlewares/auth.js';
+import { validateToken } from '../../app/middlewares/validateToken.js';
 
 //^===============CARD
-router.get('/cards', fetchAllCards);
+router.get('/cards', [validateToken, auth, admin ],fetchAllCards);
 router.post('/cards', createCard);
 
 router.get('/cards/:id', fetchOneCard);

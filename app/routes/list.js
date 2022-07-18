@@ -10,7 +10,7 @@ import {validateToken} from '../middlewares/validateToken.js'
 
 
 //^===============LIST
-router.get('/lists', validateToken, fetchAllLists);
+router.get('/lists', [validateToken, auth, admin ], fetchAllLists);
 router.post('/lists', createList);
 
 router.get('/lists/:id', fetchOneList);

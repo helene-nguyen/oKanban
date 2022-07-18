@@ -64,6 +64,7 @@ async function signInUser(req, res) {
     //* -- JWT
     //remove
     // console.log('\x1b[1;34m START SIGN IN refreshToken not exists : \x1b[0m ', req.session.refreshToken);
+    req.session.email = email;
 
     const accessToken = generateAccessToken({ user: email });
     const refreshToken = generateRefreshToken({ user: email }, req);
@@ -170,9 +171,10 @@ async function signOutUser(req, res, next) {
   try {
     //* -- JWT LOG OUT
     // console.log('\x1b[1;34m START SIGN OUT check session \x1b[0m', req.session.refreshToken);
-
+    console.log("req.session.email SIGN OUT: ", req.email.user);
     getRefreshToken(req, res);
     req.session.destroy();
+    console.log("req.session.email SIGN OUT: ", req.email.user);
 
     return res.status(200).json('Disconnected');
 
