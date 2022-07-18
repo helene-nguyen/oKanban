@@ -18,9 +18,8 @@ function validateToken(req, res, next) {
         throw new ErrorApi('Token is invalid !', req, res, 403);
       }
       req.email = user;
-      console.log(" req.session.email IN VALIDATE TOKEN : ",  req.email);
       req.session.token = accessToken;
-      console.log('TOKEN REQ SESSION IN VALIDATE : ', req.session.token);
+      
       // console.log('JETON VALIDE');
       next();
     });
@@ -41,7 +40,6 @@ function getRefreshToken(req, res, next) {
     let refreshToken = authHeader.split(' ')[1];
     // console.log('\x1b[1;36m AUTH HEADER SPLIT IN GET REFRESH : \x1b[0m', refreshToken);
     
-
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
 
       if (err) {
