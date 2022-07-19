@@ -4,7 +4,7 @@ import { getRefreshToken } from '../middlewares/validateToken.js';
 
 //~  JWT ACCESS_TOKEN
 function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 1d => one day, 60m => 60 minutes
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1d' }); // 1d => one day, 60m => 60 minutes
 }
 
 function generateRefreshToken(user, req) {
