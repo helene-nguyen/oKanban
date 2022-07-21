@@ -1,239 +1,194 @@
+//Yumicode 2022
 // ~ IMPORTATIONS
-import {
-    Card,
-    List
-} from '../models/index.js';
-import {
-    _404,
-    _500
-} from './errorController.js';
+import { Card, List } from '../models/index.js';
+import errorAPI from './errorController.js';
 import assert from 'assert';
-import {
-    isValidHexadecimalColor
-} from './utils/utils.js';
+import { isValidHexadecimalColor } from '../middlewares/validHex.js';
 
 // ~ FUNCTIONS
-// ~ ------------------------------------------------ FETCH ALL CARDS
-
-// Cette fonction permet de retourner toutes les cartes existantes,
-// une fois la requête GET http://[adress]/cards lancé.
+// ~ ------------------------------- FETCH ALL CARDS
+// GET http://[adress]/cards
 async function fetchAllCards(req, res) {
+  try {
+    const allCards = await Card.findAll({
+      attributes: {
+        exclude: ['created_at', 'updated_at']
+      },
+      order: [['order', 'ASC']]
+    });
 
-    try {
-        // Utilisation de la méthode findAll() de sequelize,
-        // avec comme attribut une exclusion regroupant tout les éléments non essentiel 
-        // (cela permet un gain significatif en terme de vitesse et mémoire)
-        const allCards = await Card.findAll({
-            attributes: {
-                exclude: ['created_at', 'updated_at'],
-            },
-            order: ['id']
-            
-        });
-        // on affiche avec json notre résultat
-        res.json(allCards);
+    res.json(allCards);
+  } catch (err) {
+    errorAPI(err, req, res,500);
+  }
+}
 
-    } catch (err) {
-        _500(err, req, res);
-    }
-};
-
-// ~ ------------------------------------------------ CREATE CARD
-
-// Cette fonction permet la création d'une nouvelle carte,
-// une fois la requête POST http://[adress]/cards lancé.
+// ~ ------------------------------- CREATE CARD
+// POST http://[adress]/cards .
 async function createCard(req, res) {
+  try {
+    let { title, order, description, color } = req.body;
+    // Syntax: assert.ok(condition, [message]) => (import assert from 'assert';)
+    //NON NULL in our tables
+    assert.ok(title, `Title or description should be provided`);
+    assert.ok(description, `A description should be provided`);
+    assert.ok(isValidHexadecimalColor(color ? color : (color = '#000')), `Invalid type: color should be a valid hexadecimal code (string)`);
 
-    try {
-        let {
-            title,
-            order,
-            description,
-            color
-        } = req.body;
-        // L'utilisation de la méthode assert.ok() nous permet de faire facilement des vérifications,
-        // en effet si l'assertion est fausse alors on force l'affichage d'une erreur
-        // Syntaxe : assert.ok(valeur[, message]) et nécessite une importation (import assert from 'assert';)
-        // On répertorie tout les champs obligatoire (NON NULL)
-        assert.ok(title && order, `Le nom ou la position de la carte doit être précisé`);
-        assert.ok(!isNaN(order), `La position doit être un nombre`);
-        assert.ok(description, `La description de la carte doit être précisée`);
-        assert.ok(isValidHexadecimalColor(color ? color : color = '#000'), `Invalid type: color should be a valid hexadecimal code (string)`);
+    // with create() with Sequelize, no need to save()
+    await Card.create({
+      ...req.body
+    });
 
-        // L'utilisation du spread opérateur nous permet de récupéré tout les champs nécessaires,
-        // sans avoir besoin de crée d'étape intermédiaire lors de la création d'une carte,
-        // et comme on utilise la méthode create() de séquelize, pas besoin de faire save()
-        await Card.create({
-            ...req.body
-        });
+    res.json(`Card created !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-        // on affiche avec json notre message
-        res.json(`La carte a bien été créée`);
-
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
-
-// ~ ------------------------------------------------ FETCH ONE CARD
-
-// Cette fonction permet de retourne les détails d'une carte demandée
-// ayant pour id celle situé sur le placeholder de la requête ainsi
-// que ses tags associées
+// ~ ------------------------------- FETCH ONE CARD
 // ( GET http://[adress]/cards/[:id] )
 async function fetchOneCard(req, res) {
+  try {
+    // Récupération de l'id ( Number permet une certaine sécurité )
+    const cardId = Number(req.params.id);
 
-    try {
-        // Récupération de l'id ( Number permet une certaine sécurité )
-        const cardId = Number(req.params.id);
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+    // L'utilisation de la méthode findOne() récupère la première entrée
+    // qui remplit les options de requête, ici on a juste un where "id"
+    // comme pour les autres méthodes on exclus tout les éléments non nécessaires
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      },
+      attributes: {
+        exclude: ['created_at', 'updated_at']
+      }
+    });
+    assert.ok(card, `This card doesn't exist !`);
+    // on affiche avec json notre résultat
+    res.json(card);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-
-        assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
-        // L'utilisation de la méthode findOne() récupère la première entrée 
-        // qui remplit les options de requête, ici on a juste un where "id"
-        // comme pour les autres méthodes on exclus tout les éléments non nécessaires
-        const card = await Card.findOne({
-            where: {
-                id: cardId
-            },
-            attributes: {
-                exclude: ['created_at', 'updated_at']
-            }
-        });
-        assert.ok(card, `La carte n'existe pas !`);
-        // on affiche avec json notre résultat
-        res.json(card)
-
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
-
-// ~ ------------------------------------------------ UPDATE CARD
-// Cette fonction permet de mettre à jour les informations de la carte
-// ayant pour id celle situé sur le placeholder de la requête
-// (requête PATCH http://[adress]/cards/[:id] )
+// ~ ------------------------------- UPDATE CARD
+// ( PATCH http://[adress]/cards/[:id] )
 async function updateCard(req, res) {
+  try {
+    let { title, order, description, color } = req.body;
 
-    try {
-        let {
-            title,
-            order,
-            description,
-            color
-        } = req.body;
+    const cardId = Number(req.params.id);
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
-        const cardId = Number(req.params.id);
-        assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
 
-        const card = await Card.findOne({
-            where: {
-                id: cardId
-            }
-        });
+    //^conditions
+    assert.ok(card, `La carte n'existe pas`);
 
-        //^conditions
-        //todo Gtn add
-        assert.ok(card, `La carte n'existe pas`);
-        assert.ok(title && order, `Le nom ou la position de la carte doit être précisé`);
-        assert.ok(!isNaN(order), `La position doit être un nombre`);
-        assert.ok(description, `La description de la carte doit être précisée`);
-        //todo Gtn add 
-        assert.ok(isValidHexadecimalColor(color ? color : '#000'), `Invalid type: position should be a valid hexadecimal code (string)`);
-        // L'utilisation de la méthode update() permet la mise à jours des
-        // informations de la carte
-        await Card.update(
-            // L'utilisation du spread opérateur nous permet de récupérer tout les champs nécessaires,
-            // il peut être utilisé sur le req.body ainsi que sur le req.params
-            // Attention l'ordre est important [values, conditions]
-            {
-                ...req.body
-            }, {
-                where: {
-                    ...req.params
-                }
-            }
-        );
-        // On affiche avec json notre message
-        res.json(`Les informations ont été mises à jour`);
+    assert.ok(isValidHexadecimalColor(color ? color : '#000'), `Invalid type: position should be a valid hexadecimal code (string)`);
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
+    await Card.update(
+      // order of info is important here [values, conditions]
+      {
+        ...req.body
+      },
+      {
+        where: {
+          ...req.params
+        }
+      }
+    );
 
-// ~ ------------------------------------------------ DELETE CARD
+    res.json(`Everything is updated !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-// Cette fonction permet de supprimé la carte demandé,
-// ayant pour id celle situé sur le placeholder de la requête
-// ( requête DELETE http://[adress]/cards/[:id] )
+// ~ ------------------------------- DELETE CARD
+// ( DELETE http://[adress]/cards/[:id] )
 async function deleteCard(req, res) {
+  try {
+    const cardId = Number(req.params.id);
 
-    try {
-        const cardId = Number(req.params.id);
-        //todo Gtn
-        assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
-        const card = await Card.findOne({
-            where: {
-                id: cardId
-            }
-        });
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
 
-        //^conditions
-        //todo Gtn add
-        assert.ok(card, `La carte n'existe pas`);
-        // Utilisation de la méthode destroy() avec sa condition
-        await Card.destroy({
-            where: {
-                ...req.params
-            }
-        });
-        // On affiche avec json notre message
-        res.json(`La carte a bien été supprimée !`);
+    //^conditions
+    assert.ok(card, `This card doesn't exist !`);
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
+    await Card.destroy({
+      where: {
+        ...req.params
+      }
+    });
 
-// ~ ------------------------------------------------ FETCH ALL CARDS BY LIST ID
+    res.json(`Card deleted !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-// Cette fonction permet de retourner toutes les cartes lié,
-// ayant pour référence l'id de la liste donné dans le placeholder [:id]
-// ( requête GET http://[adress]/lists/[:id]/cards )
+// ~ ------------------------------- FETCH ALL CARDS BY LIST ID
+// ( GET http://[adress]/lists/[:id]/cards )
 async function fetchAllCardsByListId(req, res) {
+  try {
+    const listId = Number(req.params.id);
 
-    try {
-        // Récupération de l'id
-        const listId = Number(req.params.id);
-        // Vérification si c'est un nombre ou non
-        assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
-        //todo Gtn 
-        const fetchOneList = await List.findOne({
-            where: {
-                id: listId
-            }
-        });
-        // Si fetchOneList n'existe pas alors on force l'erreur
-        assert.ok(fetchOneList, `La liste n'existe pas`);
+    assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
 
-        // on récupère tout les cards lié a la list trouvé
-        const allCards = await fetchOneList.getCards()
-        // On affiche avec json notre résultat
-        res.json(allCards);
+    const fetchOneList = await List.findOne({
+      where: {
+        id: listId
+      }
+    });
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
+    assert.ok(fetchOneList, `List doesn't exist !`);
 
-// on export toutes nos fonctions
-export {
-    fetchAllCards,
-    createCard,
-    fetchOneCard,
-    updateCard,
-    deleteCard,
-    fetchAllCardsByListId
-};
+    const allCards = await fetchOneList.getCards();
+
+    res.json(allCards);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
+// ~ ------------------------------- DELETE ALL CARDS BY LIST ID
+// ( DELETE http://[adress]/lists/[:id]/cards )
+async function deleteCardsByListId(req, res) {
+  try {
+    const listId = Number(req.params.id);
+
+    assert.ok(!isNaN(listId), `Please verify the provided id, it's not a number`);
+
+    const cards = await Card.findAll({
+      where: {
+        list_id: listId
+      }
+    });
+
+    //^conditions
+    assert.ok(cards, `These cards don't exist !`);
+
+    await Card.destroy({
+      where: {
+        list_id: listId
+      }
+    });
+
+    res.json(`Cards deleted !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
+
+export { fetchAllCards, createCard, fetchOneCard, updateCard, deleteCard, fetchAllCardsByListId, deleteCardsByListId };

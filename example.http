@@ -1,21 +1,22 @@
-@entryPoint = http://localhost:4100
+@entryPoint = http://localhost:4110
 
 #------------------------HOME 
 GET {{entryPoint}}
 
 # ----------------------------LIST
 ###
-GET {{entryPoint}}/lists
+GET {{entryPoint}}/lists/
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY1Nzk2NTQxOCwiZXhwIjoxNjU3OTY2MzE4fQ.FFghmBpOXVhOdoxxwxd8pSWlW6ygXZxu4AwLU8FVcj4
+
 
 ###
 POST {{entryPoint}}/lists
 #format json
 Content-type: application/json
-#Très strict le format d'écriture pour le test, espace avant application et saut à la ligne
 
 {
     "title": "Fredo",
-    "order": 15,
     "user_id": 1
 }
 
@@ -27,7 +28,7 @@ Content-type: application/json
 # &user_id=1
 
 ###
-GET {{entryPoint}}/lists/1
+GET {{entryPoint}}/lists/7
 
 ###
 PATCH {{entryPoint}}/lists/5
@@ -36,8 +37,7 @@ Content-type: application/json
 #Très strict le format d'écriture pour le test, C majuscule, espace avant application et saut à la ligne
 
 {
-    "title": "UPDATE",
-    "order": 9,
+    "order": 5,
     "user_id": 1
 }
 
@@ -80,7 +80,7 @@ PUT {{entryPoint}}/cards/1/tags/13
 DELETE {{entryPoint}}/cards/1/tags/13
 
 ###
- GET {{entryPoint}}/cards/1/tags
+GET {{entryPoint}}/cards/1/tags
 
 # ------------------------------ CARD
 
@@ -112,33 +112,66 @@ Content-type: application/json
     "list_id": 2
 }
 ###
-DELETE {{entryPoint}}/cards/15
+DELETE {{entryPoint}}/cards/9
 
 ###
 GET {{entryPoint}}/lists/1/cards
 
 ###
-GET {{entryPoint}}/cards/1/tags
+GET {{entryPoint}}/cards/9/tags
 
+###
+DELETE {{entryPoint}}/lists/2/cards
 # ----------------------------- USER
 
-###
-GET {{entryPoint}}/kanban/
 
 ###
-GET {{entryPoint}}/profile/
+GET {{entryPoint}}/users/profile/5
 
 ###
-POST {{entryPoint}}/signin/
+POST {{entryPoint}}/users/signin
+Content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
 
 ###
-POST {{entryPoint}}/signup/
+POST {{entryPoint}}/users/signup
+Content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test",
+    "passwordConfirm": "test"
+}
 
 ###
-PATCH {{entryPoint}}/profile/
+PATCH {{entryPoint}}/users/profile/4
+Content-type: application/json
+
+{  
+    "lastname":"admin",
+    "email":"admin@admin.com",
+    "password": "admin",
+    "passwordConfirm": "admin"
+}
 
 ###
-DELETE {{entryPoint}}/profile/
+DELETE {{entryPoint}}/users/profile/6
 
 ###
-PUT {{entryPoint}}/profile/
+GET {{entryPoint}}/users/signout
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjU3OTYyNDM3LCJleHAiOjE2NTc5NjM2Mzd9.LoSxI7duENoY4A_pEPL7vTHZce1NgAG6hDmW6l25XLs
+
+
+###
+POST {{entryPoint}}/refreshToken
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY1Nzk2MjkzMSwiZXhwIjoxNjU3OTY0MTMxfQ.2-uc_Xj6sgkyRTv4lOLp_VkHy-vEU27lWU7-DYdk-fM
+
+{
+    "email": "admin@admin.com"
+}

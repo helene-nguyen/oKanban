@@ -1,0 +1,55 @@
+/*Yumicode 2022*/
+/*~Import fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap%27');
+
+/*~ASSETS*/
+:root {
+
+    /* ? - BOXSHADOW - */
+    /* https: //getcssscan.com/css-box-shadow-examples */
+
+    --box-shadow01: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    --box-shadow02: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    --box-shadow03: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    --box-shadow04: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    --box-shadow05: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+        rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    --BoxShadow06: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+        rgba(0, 0, 0, 0.23) 0px 6px 6px;
+
+    /* ? - SEPARATOR - */
+
+    --separator-top: 0px -10px 15px -18px rgba(23, 26, 38, 0.80);
+    --separator-bottom: 0px 10px 15px -18px rgba(23, 26, 38, 0.80);
+
+    /* ? - COLOR PRIMARY - */
+    /* https: //color.adobe.com/fr/trends */
+
+    --primary-color01: #011526;
+    --primary-color02: #F2F0F0;
+    --primary-color03: #8C8181;
+    --primary-color04: #BFB4B4;
+    --primary-color05: #262626;
+
+    /* ? - COLOR SECONDARY - */
+
+    /* ! - TYPOGRAPHIES - */
+    --font-poppins: 'Poppins', sans-serif;
+    --font-comfortaa: 'Comfortaa', cursive, sans-serif;
+
+}
+
+body {
+    font-family: var(--font-comfortaa);
+    font-weight: 600;
+    background-color: var(--PrimaryColor02);
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 4rem;
+    text-align: center;
+    margin: 2rem;
+    user-select: none;
+}

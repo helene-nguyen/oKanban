@@ -1,47 +1,50 @@
 //~import modules
-import { DataTypes, Model } from 'sequelize';
-import getConnexion from "../database.js"
+import { DataTypes, Model } from "sequelize";
+import getConnexion from "../database.js";
 const sequelize = getConnexion();
 
 //~class
-class List extends Model {};
+class List extends Model {}
 
-List.init({
+List.init(
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        unique: true,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      unique: true,
+      allowNull: false
     },
     title: {
-        type: DataTypes.TEXT,
-        allowNull: false
+      type: DataTypes.TEXT,
+      allowNull: false
     },
     description: {
-        type: DataTypes.TEXT,
-        allowNull: true
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     order: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: true
     },
     user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+      allowNull: false
     },
     updated_at: {
-        type: DataTypes.DATE,
-        allowNull: true
+      type: DataTypes.DATE,
+      allowNull: true
     }
-}, {
+  },
+  {
     sequelize,
-    tableName: 'list'
-});
+    tableName: "list"
+  }
+);
 
-export {List};
+export { List };

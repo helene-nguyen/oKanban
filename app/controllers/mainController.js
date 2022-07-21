@@ -1,21 +1,17 @@
 //~import modules
-import * as error from './errorController.js';
-
-import {
-    Tag
-} from '../models/index.js';
+import errorAPI from './errorController.js';
 
 //~controllers
-async function testDB(req, res) {
+async function renderHomePage(req, res) {
     try {
-        const tags = await Tag.findAll();
-        res.json(tags);
+        
+        res.json('Welcome to Okanban API');
 
     } catch (err) {
-        error._500(err, req, res);
+        errorAPI(err, req, res,500);
     }
 };
 
 export {
-    testDB
+    renderHomePage
 };

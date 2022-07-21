@@ -1,296 +1,298 @@
 //~import modules
-import {
-    _500, _404
-} from './errorController.js';
-import assert from 'assert';
-
-import {
-    Tag,
-    Card
-} from '../models/index.js';
+import errorAPI from "./errorController.js";
+import assert from "assert";
+import { Tag, Card } from "../models/index.js";
 
 //~controller
-//~ ------------------------------------------------ TAGS
+//~ ------------------------------- TAGS
 async function fetchAllTags(req, res) {
-    try {
-        const tags = await Tag.findAll({
-            attributes: {
-                exclude: ['id', 'created_at', 'updated_at']
-            },
-            order: ['name']
-        });
+  try {
+    const tags = await Tag.findAll({
+      attributes: {
+        exclude: ["created_at", "updated_at"]
+      },
+      order: [["id", "DESC"]]
+    });
 
-        res.json(tags);
+    res.json(tags);
+  } catch (err) {
+    errorAPI(err, req, res,500);
+  }
+}
 
-    } catch (err) {
-        _500(err, req, res);
-    }
-};
-
-//~ ------------------------------------------------ CREATE TAG
+//~ ------------------------------- CREATE TAG
 async function createTag(req, res) {
-    try {
-        assert.ok(req.body.name, 'Le nom du tag doit être précisé');
+  try {
+    assert.ok(req.body.name, "Tag name should be provided !");
 
-        Tag.create({
-            ...req.body
-        });
+    Tag.create({
+      ...req.body
+    });
 
-        res.json(`Le tag ${req.body.name} a bien été crée`);
+    res.json(`Tag [ ${req.body.name} ] is created !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
-
-//~ ------------------------------------------------ ONE TAG
+//~ ------------------------------- ONE TAG
 async function fetchOneTag(req, res) {
-    try {
-        const tagId = Number(req.params.id);
-        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
+  try {
+    const tagId = Number(req.params.id);
+    assert.ok(
+      !isNaN(tagId),
+      `Please verify the provided id, it's not a number`
+    );
 
-        const tag = await Tag.findByPk(tagId, {
-            attributes: ['name', 'color']
-        });
+    const tag = await Tag.findByPk(tagId, {
+      attributes: ["name", "color"]
+    });
 
-        assert.ok(tag, `Le tag n'existe pas !`);
+    assert.ok(tag, `This tag doesn't exist !`);
 
-        res.json(tag);
+    res.json(tag);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
-
-//~ ------------------------------------------------ UPDATE TAG (PATCH)
+//~ ------------------------------- UPDATE TAG (PATCH)
 async function updateTag(req, res) {
-    try {
-        const tagId = Number(req.params.id);
-        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
-        
-        const tag = await Tag.findByPk(tagId, {
-            attributes: ['name', 'color']
-        });
+  try {
+    const tagId = Number(req.params.id);
+    assert.ok(
+      !isNaN(tagId),
+      `Please verify the provided id, it's not a number`
+    );
 
-        //^condition
-        assert.ok(tag, `Le tag n'existe pas`)
-        assert.ok(req.body.name, 'Le nom du tag doit être précisé');
+    const tag = await Tag.findByPk(tagId, {
+      attributes: ["name", "color"]
+    });
 
-        await Tag.update(
-            // l'ordre est important [values, conditions]
-            { ...req.body },
-            {where: { ...req.params }}
-        );
+    //^condition
+    assert.ok(tag, `This tag doesn't exist !`);
+    assert.ok(req.body.name, "Tag name should be provided !");
 
-        return res.json(`Les informations du label a bien été mis à jour`);
+    await Tag.update(
+      //[values, conditions]
+      {
+        ...req.body
+      },
+      {
+        where: {
+          ...req.params
+        }
+      }
+    );
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
-//~ ------------------------------------------------ DELETE TAG
+    return res.json(`Everything is up-to-date !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
+//~ ------------------------------- DELETE TAG
 async function deleteTag(req, res) {
-    try {
-        const tagId = Number(req.params.id);
-        assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
-        
-        const tag = await Tag.findByPk(tagId, {
-            attributes: ['name', 'color']
-        });
+  try {
+    const tagId = Number(req.params.id);
+    assert.ok(
+      !isNaN(tagId),
+      `Please verify the provided id, it's not a number`
+    );
 
-        //^condition
-        assert.ok(tag, `Le tag n'existe pas`)
+    const tag = await Tag.findByPk(tagId, {
+      attributes: ["name", "color"]
+    });
 
-        await Tag.destroy({
-            where: {
-                ...req.params
-            }
-        });
+    //^condition
+    assert.ok(tag, `This tag doesn't exist !`);
 
-        res.json(`Le tag a bien été supprimé !`);
+    await Tag.destroy({
+      where: {
+        ...req.params
+      }
+    });
 
-    } catch (err) {
-        _404(err, req, res);
-    }
-};
+    res.json(`Tag deleted !`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-// ~ ------------------------------------------------ UPSERT TAG BY CARD ID(PUT)
+// ~ ------------------------------- UPSERT TAG BY CARD ID(PUT)
 // PUT http://[adresse]/cards/[:cardId]/tags/[:tagName]
-async function addAsWithTag(req, res) {
-        try {
-            /*   // Une erreur survient si on choisit de partir sur un req.params.id pour le tag
-              // en effet notre Import table a pour paramètre ALWAYS pour l'id,
-              // on ne peut donc pas décider nous même de la création du tag par l'id
-              // c'est pourquoi nous allons faire la recherche par le name du tag
-              // on sécurise le type de valeur enregistré dans les placeholders [:tagName] et [:cardId]
-              const cardId = Number(req.params.cardId);
-              const tagName = (req.params.tagName).toString();
+async function findOrCreateTagByCardId(req, res) {
+  try {
+    const cardId = Number(req.params.cardId);
+    const tagName = req.params.tagName.toString();
+    const color = req.body.color;
 
-              // isNaN vérifie si une chaine donné est un nombre ou pas (return true ou false)
-              // si !isNaN(cardId) vérifie true alors on fait rien sinon on déclenche l'erreur
-              assert.ok(!isNaN(cardId), 'Chemin non conforme');
+    assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
 
-              // On récupère un tag, mais dans le cas ou il vaut null, alors on le transforme
-              // en une string qu'on utilisera pour la valeur par défault dans la création de ce tag
-              let oneTag = await Tag.findOne({
-                  where: {
-                      name: tagName
-                  }
-              })
-              oneTag === null ? oneTag = '#FFF' : oneTag;
+    let tag = await Tag.findOne({
+      where: {
+        name: tagName
+      }
+    });
 
-              const myCard = await Card.findOne({
-                  where: {
-                      id: cardId
-                  }
-              });
-              // Vérification de l'existance de la carte dans le cas contraire on force l'erreur
-              assert.ok(myCard, `La carte n'existe pas`);
+    tag === null ? (tag = color) : tag;
 
-              // L'utilisation de findOrCreate() permet de soit trouvé l'instance, soit de la créer,
-              //! il est necessaire d'insérer un paramètre "defaults" en cas de création
-              await Tag.findOrCreate({
-                  where: {
-                      name: tagName
-                  },
-                  defaults: {
-                      name: `${tagName}`,
-                      color: `${oneTag}`
-                  }
-              });
-               // on récupère le tag qu'on souhaite lié
-              const myTag = await Tag.findOne({
-                  where: {
-                      name: tagName
-                  }
-              })
+    const myCard = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
 
-              // Sequelize nous met à disposition différentes façon de gérer les liaisons
-              // les différentes méthodes : add, remove, set, get, count, has, create
-              //* -------->  foo.methode[as](bar)  <--------
-              //* -------->  myCard.addTags(myTag)  <--------
-              // Dans un premier temps on récupère une carte avec findOne()
-              // puis on utilise addTags(), qui aura pour paramètre le tag souhaité
-              //! Attention Tags ne représente pas le Model mais l'association !
-              myCard.addTags(myTag); */
+    assert.ok(myCard, `This tag doesn't exist !`);
 
+    // findOrCreate() find the instance, or create it
+    //! "defaults" when create
+    await Tag.findOrCreate({
+      where: {
+        name: tagName
+      },
+      defaults: {
+        name: `${tagName}`,
+        color: `${tag}`
+      }
+    });
 
-            const cardId = Number(req.params.cardId);
-            const tagId = Number(req.params.tagId);
+    const myTag = await Tag.findOne({
+      where: {
+        name: tagName
+      }
+    });
 
-            assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
-            assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
+    // Sequelize links
+    //methods: add, remove, set, get, count, has, create
+    //* -------->  foo.methode[as](bar)  <--------
+    //* -------->  myCard.addTags(myTag)  <--------
 
-            const card = await Card.findOne({
-                where: {
-                    id: cardId
-                }
-            });
-            const tag = await Tag.findOne({
-                where: {
-                    id: tagId
-                }
-            });
+    //!!
+    myCard.addTags(myTag);
 
-            // On vérifie les existances de la carte et du tag
-            assert.ok(card, `La carte n'existe pas`);
-            assert.ok(tag, `Le tag n'existe pas`);
-            assert.ok(!await card.hasTags(tag), `L'association existe déjà`)
+    res.json(`Tag is linked to card`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-                card.addTags(tag);
+//~ ------------------------------- DELETE TAGS BY CARD ID
+async function addTagToCard(req, res) {
+  try {
+    const cardId = Number(req.params.cardId);
+    const tagId = Number(req.params.tagId);
 
-                res.json(`Le tag a bien été lié`);
+    assert.ok(
+      !isNaN(cardId),
+      `Please verify the provided id, it's not a number`
+    );
+    assert.ok(
+      !isNaN(tagId),
+      `Please verify the provided id, it's not a number`
+    );
 
-            }
-            catch (err) {
-                _404(err, req, res);
-            }
-        };
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
+    const tag = await Tag.findOne({
+      where: {
+        id: tagId
+      }
+    });
 
-        //~ ------------------------------------------------ DELETE TAGS BY CARD ID
-        // Cette fonction permet de supprimé l'association entre le tag et la carte lié
-        // ( requête DELETE http://[adress]/cards/[:cardId]/tags/[:tagId] )
-        async function deleteAsWithTag(req, res) {
-            try {
-                // Récupérations des req.params avec une sécurité Number
-                const cardId = Number(req.params.cardId);
-                const tagId = Number(req.params.tagId);
+    assert.ok(card, `This card doesn't exist !`);
+    assert.ok(tag, `This tag doesn't exist !`);
+    assert.ok(!await card.hasTags(tag), `There is already an association !`);
 
-                // isNaN vérifie si une chaine donné est un nombre ou pas (return true ou false)
-                assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
-                assert.ok(!isNaN(tagId), `Please verify the provided id, it's not a number`);
+    card.addTags(tag);
 
-                // Pour pouvoir delete une associations ils nous faut récupérer 
-                // dans notre cas oneCard et oneTag
-                const card = await Card.findOne({
-                    where: {
-                        id: cardId
-                    }
-                });
-                const tag = await Tag.findOne({
-                    where: {
-                        id: tagId
-                    }
-                });
+    res.json(`Tag is linked to card`);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-                // On vérifie les existances de la carte et du tag
-                assert.ok(card, `La carte n'existe pas`);
-                assert.ok(tag, `Le tag n'existe pas`);
+//~ ------------------------------- DELETE TAGS BY CARD ID
 
-                // Utilisation de la méthode remove de sequelize pour dissocié 
-                card.removeTags(tag);
+// ( DELETE http://[adress]/cards/[:cardId]/tags/[:tagId] )
+async function deleteAsWithTag(req, res) {
+  try {
+    const cardId = Number(req.params.cardId);
+    const tagId = Number(req.params.tagId);
+    assert.ok(
+      !isNaN(cardId),
+      `Please verify the provided id, it's not a number`
+    );
+    assert.ok(
+      !isNaN(tagId),
+      `Please verify the provided id, it's not a number`
+    );
 
-                res.json(` Le tag " ${tag.name} " a bien été dissocié ! `)
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
+    const tag = await Tag.findOne({
+      where: {
+        id: tagId
+      }
+    });
 
-            } catch (err) {
-                _404(err, req, res)
-            }
-        };
+    //existing of card or tag
+    assert.ok(card, `This card doesn't exist !`);
+    assert.ok(tag, `This tag doesn't exist !`);
 
-        //~ ------------------------------------------------------------------- FETCH ALL TAGS BY CARD ID
-        // Cette fonction permet de retourner tout les tags liés,
-        // ayant pour référence l'id de la carte donné dans le placeholder [:id]
-        // ( requête GET http://[adress]/cards/[:id]/tags )
-        async function fetchAllTagsByCardId(req, res) {
+    //unlink tag to specific card
+    card.removeTags(tag);
 
-            try {
+    res.json(` The tag " ${tag.name} " is well unlinked ! `);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-                // Récupération de l'id
-                const cardId = Number(req.params.id);
-                // Vérification si c'est un nombre ou non
-                assert.ok(!isNaN(cardId), `Please verify the provided id, it's not a number`);
+//~ -------------------------------------------------- FETCH ALL TAGS BY CARD ID
+// (GET http://[adress]/cards/[:id]/tags )
+async function fetchAllTagsByCardId(req, res) {
+  try {
+    const cardId = Number(req.params.id);
 
-                const card = await Card.findOne({
-                    where: {
-                        id: cardId
-                    }
-                });
-                // Si card n'existe pas alors on force l'erreur
-                assert.ok(card, `La carte n'existe pas`);
+    assert.ok(
+      !isNaN(cardId),
+      `Please verify the provided id, it's not a number`
+    );
 
-                // on récupère tout les tags lié a la carte trouvé
-                const allTags = await card.getTags({
-                    attributes: {
-                        exclude: ['created_at', 'updated_at']
-                    }
-                })
+    const card = await Card.findOne({
+      where: {
+        id: cardId
+      }
+    });
 
-                // On affiche avec json notre résultat
-                res.json(allTags);
+    assert.ok(card, `This card doesn't exist !`);
 
-            } catch (err) {
-                _404(err, req, res)
-            }
+    const allTags = await card.getTags({
+      attributes: {
+        exclude: ["created_at", "updated_at"]
+      }
+    });
 
-        };
+    res.json(allTags);
+  } catch (err) {
+     errorAPI(err, req, res,500);
+  }
+}
 
-        export {
-            fetchAllTags,
-            fetchAllTagsByCardId,
-            fetchOneTag,
-            createTag,
-            updateTag,
-            addAsWithTag,
-            deleteTag,
-            deleteAsWithTag
-        };
+export {
+  fetchAllTags,
+  fetchAllTagsByCardId,
+  fetchOneTag,
+  createTag,
+  updateTag,
+  findOrCreateTagByCardId,
+  addTagToCard,
+  deleteTag,
+  deleteAsWithTag
+};

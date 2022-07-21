@@ -1,4 +1,5 @@
-#Ignore files
+#Files to ignore
 node_modules
-.env
 sandbox
+.env
+package-lock.json

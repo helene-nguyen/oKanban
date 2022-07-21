@@ -1,18 +1,26 @@
-/* //~import modules
+//~import modules
 import { Router } from 'express';
 const router = Router();
 
+import { fetchOneUser, signInUser, createUser, updateUser, deleteUser, signOutUser } from '../controllers/userController.js';
 
-//^===============USER
-router.get('/profile');
-router.patch('/profile);
-router.delete('/profile);
+import { refreshToken } from '../services/jwt.js';
 
-router.get('/kanban);
+import { auth, admin } from '../middlewares/auth.js';
 
-router.post('/signin');
-router.post('/signup');
+//^ ___ USER
+//form
+router.get('/users/profile/:id', auth, fetchOneUser); //fetch
+router.post('/users/signin', signInUser); //signin (logIn)
 
+router.post('/users/signup', createUser); //create
 
+router.get('/users/signout', signOutUser); // Deconnexion signOut
 
-export { router }; */
+router.patch('/users/profile/:id', updateUser); //update
+router.delete('/users/profile/:id', deleteUser); //delete
+
+//^ ___ REFRESH TOKEN API
+router.post('/refreshToken', refreshToken)
+
+export { router };

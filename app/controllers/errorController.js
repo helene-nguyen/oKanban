@@ -1,16 +1,25 @@
-function _400(req, res) {
-    res.status(400).json('BAD REQUEST');
-};
-function _401(req, res) {
-    res.status(401).json('AUTHENTIFICATION ERROR');
-};
-function _403(req, res) {
-    res.status(403).json('ACCESS DENIED');
-};
-function _404(err, req, res) {//todo Gtn 
-    res.status(404).json({ "Error 404": err ? err.message : 'Page Not Found'});
-};
-function _500(err, req, res) { res.status(500).json({"Server Error 500": err.message});
-};
+export default function errorAPI(err, req, res, code) {
+    //here error handler
+    return res.status(code).json(err.message);
+}
 
-export { _400,_401, _403,_404,_500 };
+// function _400(err, req, res) {
+//   res.status(400).json(err.message); // BAD REQUEST
+// }
+// function _401(err, req, res) {
+//   res.status(401).json(err.message); // AUTHENTIFICATION ERROR
+// }
+// function _403(err, req, res) {
+//   res.status(403).json(err.message); // FORBIDDEN
+// }
+// function _404(err, req, res) {
+//   res.status(404).json(err.message); // PAGE NOT FOUND
+// }
+// function _500(err, req, res) {
+//   res.status(500).json(err.message); // SERVER ERROR
+// }
+
+// export { _500, _401, _403, _404};
+
+//Source https://sematext.com/blog/node-js-error-handling/
+
